@@ -5,7 +5,11 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-class MovieSchedulesAggregateService {
+public protocol MovieSchedulesAggregateService {
+    func getAllMovieSchedules() async -> [MovieSchedulesAggregate]
+}
+
+public class MovieSchedulesAggregateServiceImpl: MovieSchedulesAggregateService {
     private let movieRepository: MovieRepository
     private let movieSchedulesRepository: MovieSchedulesRepository
     private let theaterRepository: TheaterRepository
@@ -16,7 +20,7 @@ class MovieSchedulesAggregateService {
         self.theaterRepository = theaterRepository
     }
     
-    func getAllMovieSchedules() async -> [MovieSchedulesAggregate] {
+    public func getAllMovieSchedules() async -> [MovieSchedulesAggregate] {
         var result: [MovieSchedulesAggregate] = []
         let movies = await movieRepository.getAll()
         for movie in movies {

@@ -24,6 +24,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D677E22F2CFCF65E0058D9EE /* MoviesScheduleApplication */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MoviesScheduleApplication; sourceTree = "<group>"; };
+		D677E2462CFCFE390058D9EE /* MoviesScheduleDomain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MoviesScheduleDomain; sourceTree = "<group>"; };
 		D6E557B82CF8F6AC00945C31 /* MoviesSchedule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoviesSchedule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6E557CC2CF8F6AD00945C31 /* MoviesScheduleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoviesScheduleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6E557D62CF8F6AD00945C31 /* MoviesScheduleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoviesScheduleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,8 @@
 		D6E557AF2CF8F6AC00945C31 = {
 			isa = PBXGroup;
 			children = (
+				D677E2462CFCFE390058D9EE /* MoviesScheduleDomain */,
+				D677E22F2CFCF65E0058D9EE /* MoviesScheduleApplication */,
 				D6E557BA2CF8F6AC00945C31 /* MoviesSchedule */,
 				D6E557CF2CF8F6AD00945C31 /* MoviesScheduleTests */,
 				D6E557D92CF8F6AD00945C31 /* MoviesScheduleUITests */,
@@ -209,7 +213,6 @@
 			mainGroup = D6E557AF2CF8F6AC00945C31;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				D6E557EA2CF8F7B400945C31 /* XCLocalSwiftPackageReference "MoviesScheduleDomain" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D6E557B92CF8F6AC00945C31 /* Products */;
@@ -578,13 +581,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		D6E557EA2CF8F7B400945C31 /* XCLocalSwiftPackageReference "MoviesScheduleDomain" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = MoviesScheduleDomain;
-		};
-/* End XCLocalSwiftPackageReference section */
 	};
 	rootObject = D6E557B02CF8F6AC00945C31 /* Project object */;
 }

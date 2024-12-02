@@ -39,12 +39,12 @@ struct MovieSchedulesAggregateServiceTest {
     }
     
     let service: MovieSchedulesAggregateService
-    var movieRepository = MovieRepositoryMock()
-    var movieSchedulesRepository = MovieSchedulesRepositoryMock()
-    var theaterRepository = TheaterRepositoryMock()
+    let movieRepository = MovieRepositoryMock()
+    let movieSchedulesRepository = MovieSchedulesRepositoryMock()
+    let theaterRepository = TheaterRepositoryMock()
     
     init() {
-        service = MovieSchedulesAggregateService(movieRepository: movieRepository, movieSchedulesRepository: movieSchedulesRepository, theaterRepository: theaterRepository)
+        service = MovieSchedulesAggregateServiceImpl(movieRepository: movieRepository, movieSchedulesRepository: movieSchedulesRepository, theaterRepository: theaterRepository)
     }
 
     @Test mutating func shouldReturnAllMoviesSchedules() async throws {

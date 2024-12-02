@@ -5,6 +5,6 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-protocol MovieSchedulesRepository {
+public protocol MovieSchedulesRepository {
     func get(byMovieId movieId: Int64) async -> [MovieSchedules]
 }

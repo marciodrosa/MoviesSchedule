@@ -7,8 +7,14 @@
 
 import Foundation;
 
-struct Movie: Equatable {
-    let id: Int64
-    let title: String
-    let duration: TimeInterval
+public struct Movie: Equatable {
+    public let id: Int64
+    public let title: String
+    public let duration: TimeInterval
+    
+    public init(id: Int64, title: String, duration: TimeInterval) {
+        self.id = id
+        self.title = title
+        self.duration = duration
+    }
 }
