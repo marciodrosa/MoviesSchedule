@@ -7,19 +7,19 @@
 
 import MoviesScheduleDomain
 
-public protocol ScheduleSelectionViewModel {
-    var loading: Bool { get }
-    var movieSchedules: [MovieSchedulesAggregate] { get }
+public protocol ScheduleSelectionViewModel: Sendable {
+    var loading: Bool { get async }
+    var movieSchedules: [MovieSchedulesAggregate] { get async }
     func load() async
-    func viewSummary()
+    func viewSummary() async
 }
 
-public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
+public actor ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     private let router: ScheduleSelectionRouter
     private let movieSchedulesAggregateService: MovieSchedulesAggregateService
     public private(set) var loading: Bool = false
-    public private(set) var movieSchedules: [MoviesScheduleDomain.MovieSchedulesAggregate] = []
+    public private(set) var movieSchedules: [MovieSchedulesAggregate] = []
     
     public init(router: ScheduleSelectionRouter, movieSchedulesAggregateService: MovieSchedulesAggregateService) {
         self.router = router
@@ -31,11 +31,12 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
             return
         }
         loading = true
-        movieSchedules = await movieSchedulesAggregateService.getAllMovieSchedules()
+        let service = movieSchedulesAggregateService // we neet to set to a local var to avoid a Swift 6 bug
+        movieSchedules = await service.getAllMovieSchedules()
         loading = false
     }
     
-    public func viewSummary() {
-        router.goToSummary()
+    public func viewSummary() async {
+        await router.goToSummary()
     }
 }

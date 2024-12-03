@@ -13,31 +13,58 @@ struct ScheduleSelectionView: View {
     
     let viewModel: ScheduleSelectionViewModel
     
+    @State
+    private var movieSchedules: [MovieSchedulesAggregate] = []
+    
+    @State
+    private var loading: Bool = false
+    
     init(viewModel: ScheduleSelectionViewModel) {
         self.viewModel = viewModel
     }
     
     var body: some View {
-        if viewModel.loading {
-            ProgressView()
-        } else {
-            ScrollView(.vertical) {
-                VStack(
-                    alignment: .leading,
-                    spacing: 0
-                ) {
-                    ForEach(viewModel.movieSchedules) { movieSchedule in
-                        movieView(movieSchedule)
+        NavigationView {
+            VStack {
+                if loading {
+                    ProgressView()
+                } else {
+                    ScrollView(.vertical) {
+                        VStack(
+                            alignment: .leading,
+                            spacing: 0
+                        ) {
+                            ForEach(movieSchedules) { movieSchedule in
+                                movieView(movieSchedule)
+                            }
+                        }
+                    }
+                }
+            }
+            .toolbar {
+                ToolbarItem {
+                    Button("Reload") {
+                        Task {
+                            loading = true
+                            let vm = viewModel
+                            await vm.load()
+                            movieSchedules = await viewModel.movieSchedules
+                            loading = false
+                        }
                     }
                 }
             }
         }
+        
     }
     
     func movieView(_ movieSchedule: MovieSchedulesAggregate) -> some View {
         let theatersSchedules: [MovieSchedulesAggregate.Schedules] = movieSchedule.theatersSchedules
         return VStack(alignment: .leading) {
-            Text(movieSchedule.movie.title).font(Font.system(size: 24))
+            VStack(alignment: .leading) {
+                Text(movieSchedule.movie.title).font(Font.system(size: 24))
+                Text(String(movieSchedule.movie.duration)).font(Font.system(size: 12))
+            }
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(theatersSchedules) { theaterSchedule in
                     theaterSchedulesView(theaterSchedule)
@@ -80,7 +107,7 @@ struct ScheduleSelectionView: View {
 }
 
 #Preview {
-    class ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
+    actor ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
         var loading: Bool = false
         
         var movieSchedules: [MovieSchedulesAggregate] = [

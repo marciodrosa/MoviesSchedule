@@ -5,7 +5,8 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-public struct MovieSchedulesAggregate: Equatable, Identifiable {
+
+public struct MovieSchedulesAggregate: Equatable, Identifiable, Copyable, Sendable {
     
     public struct Schedules: Equatable, Identifiable {
         public let theater: Theater
@@ -15,7 +16,7 @@ public struct MovieSchedulesAggregate: Equatable, Identifiable {
             return theater.id
         }
     }
-    
+
     public let movie: Movie
     private let movieSchedules: [MovieSchedules]
     private let theaters: [Theater]

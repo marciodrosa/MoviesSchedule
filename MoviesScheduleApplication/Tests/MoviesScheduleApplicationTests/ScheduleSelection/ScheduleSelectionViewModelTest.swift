@@ -12,16 +12,20 @@ import MoviesScheduleApplication
 
 struct ScheduleSelectionViewModelTest {
     
-    class MovieSchedulesAggregateServiceMock: MovieSchedulesAggregateService {
+    actor MovieSchedulesAggregateServiceMock: MovieSchedulesAggregateService {
         
         var movieSchedulesAggregates: [MovieSchedulesAggregate] = []
+        
+        func setMovieSchedulesAggregates(_ movieSchedulesAggregates: [MovieSchedulesAggregate]) {
+            self.movieSchedulesAggregates = movieSchedulesAggregates
+        }
         
         func getAllMovieSchedules() async -> [MovieSchedulesAggregate] {
             return movieSchedulesAggregates
         }
     }
     
-    class ScheduleSelectionRouterMock: ScheduleSelectionRouter {
+    actor ScheduleSelectionRouterMock: ScheduleSelectionRouter {
         
         var wentToSummary = false
         func goToSummary() {
@@ -50,14 +54,14 @@ struct ScheduleSelectionViewModelTest {
                 ]
             )
         ]
-        movieSchedulesAggregateService.movieSchedulesAggregates = movieSchedulesAggregatesToLoad
+        await movieSchedulesAggregateService.setMovieSchedulesAggregates(movieSchedulesAggregatesToLoad)
         
         // when:
         await viewModel.load()
 
         // then:
-        #expect(viewModel.movieSchedules == movieSchedulesAggregatesToLoad)
-        #expect(!viewModel.loading)
+        #expect(await viewModel.movieSchedules == movieSchedulesAggregatesToLoad)
+        #expect(await !viewModel.loading)
     }
 
 }

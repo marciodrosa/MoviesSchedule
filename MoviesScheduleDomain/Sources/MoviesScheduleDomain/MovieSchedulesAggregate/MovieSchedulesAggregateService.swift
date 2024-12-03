@@ -5,11 +5,11 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-public protocol MovieSchedulesAggregateService {
+public protocol MovieSchedulesAggregateService: Sendable {
     func getAllMovieSchedules() async -> [MovieSchedulesAggregate]
 }
 
-public class MovieSchedulesAggregateServiceImpl: MovieSchedulesAggregateService {
+public final class MovieSchedulesAggregateServiceImpl: MovieSchedulesAggregateService {
     private let movieRepository: MovieRepository
     private let movieSchedulesRepository: MovieSchedulesRepository
     private let theaterRepository: TheaterRepository
