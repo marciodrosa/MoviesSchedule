@@ -5,16 +5,24 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-public struct MovieSchedulesAggregate: Equatable {
+public struct MovieSchedulesAggregate: Equatable, Identifiable {
     
-    public struct Schedules: Equatable {
+    public struct Schedules: Equatable, Identifiable {
         public let theater: Theater
         public let schedules: [String]
+        
+        public var id: Int64 {
+            return theater.id
+        }
     }
     
     public let movie: Movie
     private let movieSchedules: [MovieSchedules]
     private let theaters: [Theater]
+    
+    public var id: Int64 {
+        movie.id
+    }
     
     public init(movie: Movie, movieSchedules: [MovieSchedules], theaters: [Theater]) {
         self.movie = movie
