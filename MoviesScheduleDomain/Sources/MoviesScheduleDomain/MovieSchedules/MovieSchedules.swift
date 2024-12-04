@@ -5,7 +5,7 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-public struct MovieSchedules: Equatable, Sendable {
+public struct MovieSchedules: Equatable, Sendable, Decodable {
     public let movieId: Int64
     public let theaterId: Int64
     public let schedules: [String]

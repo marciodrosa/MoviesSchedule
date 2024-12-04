@@ -6,5 +6,5 @@
 //
 
 public protocol MovieSchedulesRepository: Sendable {
-    func get(byMovieId movieId: Int64) async -> [MovieSchedules]
+    func get(byMovieId movieId: Int64) async throws(RetrieveError) -> [MovieSchedules]
 }

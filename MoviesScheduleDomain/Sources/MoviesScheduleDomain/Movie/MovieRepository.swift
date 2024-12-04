@@ -6,5 +6,5 @@
 //
 
 public protocol MovieRepository: Sendable {
-    func getAll() async -> [Movie]
+    func getAll() async throws(RetrieveError) -> [Movie]
 }

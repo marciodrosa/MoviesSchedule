@@ -5,7 +5,7 @@
 //  Created by Marcio Rosa on 28/11/24.
 //
 
-public struct Theater: Equatable, Sendable {
+public struct Theater: Equatable, Sendable, Decodable {
     public let id: Int64
     public let name: String
     

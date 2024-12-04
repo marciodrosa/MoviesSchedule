@@ -7,7 +7,7 @@
 
 import Foundation;
 
-public struct Movie: Equatable, Sendable {
+public struct Movie: Equatable, Sendable, Decodable {
     public let id: Int64
     public let title: String
     public let duration: TimeInterval
