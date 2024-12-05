@@ -9,7 +9,7 @@ import SwiftUI
 import MoviesScheduleApplication
 import MoviesScheduleDomain
 
-struct ScheduleSelectionView: View {
+public struct ScheduleSelectionView: View {
     
     let viewModel: ScheduleSelectionViewModel
     
@@ -19,11 +19,11 @@ struct ScheduleSelectionView: View {
     @State
     private var loading: Bool = false
     
-    init(viewModel: ScheduleSelectionViewModel) {
+    public init(viewModel: ScheduleSelectionViewModel) {
         self.viewModel = viewModel
     }
     
-    var body: some View {
+    public var body: some View {
         NavigationView {
             VStack {
                 if loading {

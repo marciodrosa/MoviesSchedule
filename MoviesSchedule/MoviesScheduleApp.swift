@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import MoviesScheduleUI
+import DependenciesManager
 
 struct MoviesScheduleApp: App {
     
@@ -25,7 +27,7 @@ struct MoviesScheduleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ScheduleSelectionView(viewModel: DependenciesManager.getter!())
         }
         .modelContainer(sharedModelContainer)
     }

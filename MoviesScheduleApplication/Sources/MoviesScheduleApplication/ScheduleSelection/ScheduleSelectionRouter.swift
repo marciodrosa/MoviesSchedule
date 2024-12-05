@@ -8,4 +8,3 @@
 public protocol ScheduleSelectionRouter: Sendable {
     func goToSummary() async
 }
-

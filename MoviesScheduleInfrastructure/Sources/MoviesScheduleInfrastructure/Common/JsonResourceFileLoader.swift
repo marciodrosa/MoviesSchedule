@@ -20,7 +20,7 @@ actor JsonResourceFileLoaderImpl: JsonResourceFileLoader {
     let bundle: Bundle
     
     init(bundle: Bundle? = nil) {
-        self.bundle = bundle ?? Bundle.main
+        self.bundle = bundle ?? Bundle.module
     }
     
     func load<T>() async throws(RetrieveError) -> [T] where T: Decodable, T: Sendable {

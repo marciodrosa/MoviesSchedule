@@ -6,9 +6,10 @@
 //
 
 import DependenciesManager
+import MoviesScheduleApplication
 
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
-        
+        .factory(ScheduleSelectionRouter.self) { getter in ScheduleSelectionRouterImpl() }
     ]
 }

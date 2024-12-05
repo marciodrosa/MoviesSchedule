@@ -11,9 +11,9 @@ public enum DependencyInstance<T, TImpl> {
     
     var protocolType: T {
         switch self {
-        case .singleton(let protocolType, let factoryFunction):
+        case .singleton(let protocolType, _):
             protocolType
-        case .factory(let protocolType, let factoryFunction):
+        case .factory(let protocolType, _):
             protocolType
         }
     }
