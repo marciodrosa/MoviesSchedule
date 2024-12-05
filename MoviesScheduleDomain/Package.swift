@@ -11,11 +11,16 @@ let package = Package(
             name: "MoviesScheduleDomain",
             targets: ["MoviesScheduleDomain"]),
     ],
+    dependencies: [
+        .package(name: "DependenciesManager", path: "../DependenciesManager")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "MoviesScheduleDomain"),
+            name: "MoviesScheduleDomain",
+            dependencies: ["DependenciesManager"]
+        ),
         .testTarget(
             name: "MoviesScheduleDomainTests",
             dependencies: ["MoviesScheduleDomain"]

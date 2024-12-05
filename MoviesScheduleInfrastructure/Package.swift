@@ -12,7 +12,8 @@ let package = Package(
             targets: ["MoviesScheduleInfrastructure"]),
     ],
     dependencies: [
-        .package(name: "MoviesScheduleDomain", path: "../MoviesScheduleDomain")
+        .package(name: "MoviesScheduleDomain", path: "../MoviesScheduleDomain"),
+        .package(name: "DependenciesManager", path: "../DependenciesManager")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -20,7 +21,8 @@ let package = Package(
         .target(
             name: "MoviesScheduleInfrastructure",
             dependencies: [
-                "MoviesScheduleDomain"
+                "MoviesScheduleDomain",
+                "DependenciesManager"
             ],
             resources: [
                 Resource.copy("JsonFiles")

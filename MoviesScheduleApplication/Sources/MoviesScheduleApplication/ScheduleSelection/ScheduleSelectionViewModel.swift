@@ -32,7 +32,7 @@ public actor ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
         }
         loading = true
         let service = movieSchedulesAggregateService // we neet to set to a local var to avoid a Swift 6 bug
-        movieSchedules = await service.getAllMovieSchedules()
+        movieSchedules = (try? await service.getAllMovieSchedules()) ?? []
         loading = false
     }
     
