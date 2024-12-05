@@ -13,7 +13,8 @@ public func setupDependencies() -> [DependencyInstance<Any, Any>] {
             MovieSchedulesAggregateServiceImpl(
                 movieRepository: getter(),
                 movieSchedulesRepository: getter(),
-                theaterRepository: getter()
+                theaterRepository: getter(),
+                userSelectionRepository: getter()
             )
         },
     ]

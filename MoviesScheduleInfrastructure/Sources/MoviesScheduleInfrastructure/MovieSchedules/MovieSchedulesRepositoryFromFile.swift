@@ -18,11 +18,7 @@ actor MovieSchedulesRepositoryFromFile: MovieSchedulesRepository {
     }
     
     func get(byMovieId movieId: Int64) async throws(RetrieveError) -> [MovieSchedules] {
-        do {
-            let allMoviesSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
-            return allMoviesSchedules.filter { $0.movieId == movieId }
-        } catch {
-            throw error
-        }
+        let allMoviesSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
+        return allMoviesSchedules.filter { $0.movieId == movieId }
     }
 }

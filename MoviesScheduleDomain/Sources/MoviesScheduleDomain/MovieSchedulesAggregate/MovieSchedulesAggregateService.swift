@@ -13,11 +13,13 @@ public final class MovieSchedulesAggregateServiceImpl: MovieSchedulesAggregateSe
     private let movieRepository: MovieRepository
     private let movieSchedulesRepository: MovieSchedulesRepository
     private let theaterRepository: TheaterRepository
+    private let userSelectionRepository: UserSelectionRepository
     
-    init(movieRepository: MovieRepository, movieSchedulesRepository: MovieSchedulesRepository, theaterRepository: TheaterRepository) {
+    init(movieRepository: MovieRepository, movieSchedulesRepository: MovieSchedulesRepository, theaterRepository: TheaterRepository, userSelectionRepository: UserSelectionRepository) {
         self.movieRepository = movieRepository
         self.movieSchedulesRepository = movieSchedulesRepository
         self.theaterRepository = theaterRepository
+        self.userSelectionRepository = userSelectionRepository
     }
     
     public func getAllMovieSchedules() async throws(RetrieveError) -> [MovieSchedulesAggregate] {
@@ -27,7 +29,8 @@ public final class MovieSchedulesAggregateServiceImpl: MovieSchedulesAggregateSe
             for movie in movies {
                 let movieSchedules = try await movieSchedulesRepository.get(byMovieId: movie.id)
                 let theaters = try await theaterRepository.get(byIds: movieSchedules.map {$0.theaterId})
-                result.append(MovieSchedulesAggregate(movie: movie, movieSchedules: movieSchedules, theaters: theaters))
+                let userSelections = try await userSelectionRepository.get(byMovieId: movie.id)
+                result.append(MovieSchedulesAggregate(movie: movie, movieSchedules: movieSchedules, theaters: theaters, userSelections: userSelections))
             }
             return result
         } catch {

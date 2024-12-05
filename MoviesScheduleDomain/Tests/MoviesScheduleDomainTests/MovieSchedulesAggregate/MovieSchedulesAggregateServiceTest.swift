@@ -50,13 +50,27 @@ struct MovieSchedulesAggregateServiceTest {
         }
     }
     
+    actor UserSelectionRepositoryMock: UserSelectionRepository {
+        
+        var userSelections: [UserSelection] = []
+        
+        func setUserSelection(_ userSelections: [UserSelection]) {
+            self.userSelections = userSelections
+        }
+        
+        func get(byMovieId movieId: Int64) async -> [UserSelection] {
+            return userSelections.filter { $0.movieId == movieId }
+        }
+    }
+    
     let service: MovieSchedulesAggregateService
     let movieRepository = MovieRepositoryMock()
     let movieSchedulesRepository = MovieSchedulesRepositoryMock()
     let theaterRepository = TheaterRepositoryMock()
+    let userSelectionRepository = UserSelectionRepositoryMock()
     
     init() {
-        service = MovieSchedulesAggregateServiceImpl(movieRepository: movieRepository, movieSchedulesRepository: movieSchedulesRepository, theaterRepository: theaterRepository)
+        service = MovieSchedulesAggregateServiceImpl(movieRepository: movieRepository, movieSchedulesRepository: movieSchedulesRepository, theaterRepository: theaterRepository, userSelectionRepository: userSelectionRepository)
     }
 
     @Test mutating func shouldReturnAllMoviesSchedules() async throws {
@@ -74,9 +88,13 @@ struct MovieSchedulesAggregateServiceTest {
             MovieSchedules(movieId: 1, theaterId: 20, schedules: ["21:00"]),
             MovieSchedules(movieId: 2, theaterId: 20, schedules: ["18:00"]),
         ])
+        await userSelectionRepository.setUserSelection([
+            UserSelection(movieId: 1, theaterId: 10, schedule: "17:30"),
+            UserSelection(movieId: 2, theaterId: 20, schedule: "18:00"),
+        ])
         
         // when:
-        let result = await service.getAllMovieSchedules()
+        let result = try! await service.getAllMovieSchedules()
         
         // then:
         #expect(result == [
@@ -89,6 +107,9 @@ struct MovieSchedulesAggregateServiceTest {
                 theaters: [
                     Theater(id: 10, name: "AMC"),
                     Theater(id: 20, name: "Cinemark")
+                ],
+                userSelections: [
+                    UserSelection(movieId: 1, theaterId: 10, schedule: "17:30"),
                 ]
             ),
             MovieSchedulesAggregate(
@@ -98,6 +119,9 @@ struct MovieSchedulesAggregateServiceTest {
                 ],
                 theaters: [
                     Theater(id: 20, name: "Cinemark")
+                ],
+                userSelections: [
+                    UserSelection(movieId: 2, theaterId: 20, schedule: "18:00"),
                 ]
             ),
         ])

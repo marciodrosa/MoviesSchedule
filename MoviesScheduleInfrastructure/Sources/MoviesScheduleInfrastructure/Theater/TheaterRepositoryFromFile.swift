@@ -17,11 +17,7 @@ actor TheaterRepositoryFromFile: TheaterRepository {
     }
     
     func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Theater] {
-        do {
-            let allTheaters: [Theater] = try await jsonResourceFileLoader.load()
-            return allTheaters.filter { ids.contains($0.id) }
-        } catch {
-            throw error
-        }
+        let allTheaters: [Theater] = try await jsonResourceFileLoader.load()
+        return allTheaters.filter { ids.contains($0.id) }
     }
 }

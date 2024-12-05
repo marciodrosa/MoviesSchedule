@@ -8,7 +8,7 @@
 import Testing
 import Foundation
 import MoviesScheduleDomain
-import MoviesScheduleApplication
+@testable import MoviesScheduleApplication
 
 struct ScheduleSelectionViewModelTest {
     
@@ -51,7 +51,8 @@ struct ScheduleSelectionViewModelTest {
                 ],
                 theaters: [
                     Theater(id: 10, name: "AMC")
-                ]
+                ],
+                userSelections: []
             )
         ]
         await movieSchedulesAggregateService.setMovieSchedulesAggregates(movieSchedulesAggregatesToLoad)

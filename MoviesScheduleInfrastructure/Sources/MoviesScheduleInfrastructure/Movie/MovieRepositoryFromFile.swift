@@ -17,10 +17,6 @@ actor MovieRepositoryFromFile: MovieRepository {
     }
     
     func getAll() async throws(RetrieveError) -> [Movie] {
-        do {
-            return try await jsonResourceFileLoader.load()
-        } catch {
-            throw error
-        }
+        return try await jsonResourceFileLoader.load()
     }
 }
