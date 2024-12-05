@@ -14,7 +14,7 @@ public protocol ScheduleSelectionViewModel: Sendable {
     func viewSummary() async
 }
 
-public actor ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
+actor ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     private let router: ScheduleSelectionRouter
     private let movieSchedulesAggregateService: MovieSchedulesAggregateService

@@ -27,7 +27,7 @@ struct MoviesScheduleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ScheduleSelectionView(viewModel: DependenciesManager.getter!())
+            ScheduleSelectionViewFactory().createView()
         }
         .modelContainer(sharedModelContainer)
     }

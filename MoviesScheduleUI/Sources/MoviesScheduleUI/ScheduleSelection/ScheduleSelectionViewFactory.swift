@@ -8,11 +8,13 @@
 import SwiftUI
 import DependenciesManager
 
+@MainActor
 public struct ScheduleSelectionViewFactory {
-   
-    /*
-    public static func createView() -> ScheduleSelectionView {
-        return ScheduleSelectionView(viewModel: DependenciesManager.getter!())
+    
+    public init() {
     }
-     */
+    
+    public func createView() -> ScheduleSelectionView {
+        ScheduleSelectionView(viewModel: DependenciesManager.getter!())
+    }
 }
