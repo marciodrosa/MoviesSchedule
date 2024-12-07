@@ -9,3 +9,7 @@ public enum RetrieveError: Error {
     case unreachable
     case invalidData
 }
+
+public enum CreateError: Error {
+    case unknow
+}

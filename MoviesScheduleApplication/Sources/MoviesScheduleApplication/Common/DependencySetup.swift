@@ -9,6 +9,8 @@ import DependenciesManager
 
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
-        .factory(ScheduleSelectionViewModel.self) { getter in ScheduleSelectionViewModelImpl(router: getter(), movieSchedulesAggregateService: getter()) },
+        .mainActorFactory(ScheduleSelectionViewModel.self, { getter in
+            ScheduleSelectionViewModelImpl(router: getter(), movieRepository: getter(), userScheduleRepository: getter(), theaterRepository: getter())
+        })
     ]
 }

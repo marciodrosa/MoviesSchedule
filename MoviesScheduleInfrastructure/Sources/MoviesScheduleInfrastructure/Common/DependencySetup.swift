@@ -12,7 +12,7 @@ public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
         .factory(JsonResourceFileLoader.self) { _ in JsonResourceFileLoaderImpl() },
         .factory(MovieRepository.self) { getter in MovieRepositoryFromFile(jsonResourceFileLoader: getter()) },
-        .factory(MovieSchedulesRepository.self) { getter in MovieSchedulesRepositoryFromFile(jsonResourceFileLoader: getter()) },
         .factory(TheaterRepository.self) { getter in TheaterRepositoryFromFile(jsonResourceFileLoader: getter()) },
+        .factory(UserScheduleRepository.self) { getter in UserScheduleCoreDataRepository() },
     ]
 }

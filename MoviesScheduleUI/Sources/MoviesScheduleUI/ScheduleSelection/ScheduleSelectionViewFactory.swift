@@ -15,6 +15,6 @@ public struct ScheduleSelectionViewFactory {
     }
     
     public func createView() -> ScheduleSelectionView {
-        ScheduleSelectionView(viewModel: DependenciesManager.getter!())
+        ScheduleSelectionView(viewModel: DependenciesManager.getter!.mainActorGet())
     }
 }

@@ -11,16 +11,29 @@ import MoviesScheduleDomain
 
 struct TheaterRepositoryFromFileTest {
     
-    static let mockedData = [
+    static let mockedTheaterData = [
         Theater(id: 1, name: "AMC"),
         Theater(id: 2, name: "Cinemark"),
         Theater(id: 3, name: "New Beverly")
     ]
     
+    static let mockedSchedulesData = [
+        MovieSchedules(movieId: 10, theaterId: 1, schedules: ["14:00", "16:00"]),
+        MovieSchedules(movieId: 20, theaterId: 1, schedules: ["17:00", "19:00"]),
+        MovieSchedules(movieId: 10, theaterId: 2, schedules: ["20:30"]),
+        MovieSchedules(movieId: 10, theaterId: 3, schedules: ["15:30"]),
+        MovieSchedules(movieId: 30, theaterId: 3, schedules: ["16:30"]),
+    ]
+    
     actor JsonResourceFileLoaderMock: JsonResourceFileLoader {
         
         func load<T>() async throws(RetrieveError) -> [T] where T : Decodable, T : Sendable {
-            return mockedData as! [T]
+            if T.self == Theater.self {
+                return mockedTheaterData as! [T]
+            } else if T.self == MovieSchedules.self {
+                return mockedSchedulesData as! [T]
+            }
+            return []
         }
     }
     
@@ -30,14 +43,18 @@ struct TheaterRepositoryFromFileTest {
         repository = TheaterRepositoryFromFile(jsonResourceFileLoader: JsonResourceFileLoaderMock())
     }
 
-    @Test func shouldGetAllMoviesFromJsonFile() async throws {
+    @Test func shouldGetByMovieIdsFromJsonFile() async throws {
         // when:
-        let result = try! await repository.get(byIds: [1, 3])
+        let result = try! await repository.get(byMovieIds: [20, 30])
         
         // then:
         #expect(result == [
-            Theater(id: 1, name: "AMC"),
-            Theater(id: 3, name: "New Beverly")
+            Theater(id: 1, name: "AMC", movieSchedules: [
+                MovieSchedules(movieId: 20, theaterId: 1, schedules: ["17:00", "19:00"]),
+            ]),
+            Theater(id: 3, name: "New Beverly", movieSchedules: [
+                MovieSchedules(movieId: 30, theaterId: 3, schedules: ["16:30"]),
+            ])
         ])
     }
 

@@ -10,22 +10,10 @@ import Foundation
 import MoviesScheduleDomain
 @testable import MoviesScheduleApplication
 
-struct ScheduleSelectionViewModelTest {
+@MainActor
+class ScheduleSelectionViewModelTest {
     
-    actor MovieSchedulesAggregateServiceMock: MovieSchedulesAggregateService {
-        
-        var movieSchedulesAggregates: [MovieSchedulesAggregate] = []
-        
-        func setMovieSchedulesAggregates(_ movieSchedulesAggregates: [MovieSchedulesAggregate]) {
-            self.movieSchedulesAggregates = movieSchedulesAggregates
-        }
-        
-        func getAllMovieSchedules() async -> [MovieSchedulesAggregate] {
-            return movieSchedulesAggregates
-        }
-    }
-    
-    actor ScheduleSelectionRouterMock: ScheduleSelectionRouter {
+    class ScheduleSelectionRouterMock: ScheduleSelectionRouter {
         
         var wentToSummary = false
         func goToSummary() {
@@ -33,36 +21,121 @@ struct ScheduleSelectionViewModelTest {
         }
     }
     
-    let movieSchedulesAggregateService = MovieSchedulesAggregateServiceMock()
+    actor MovieRepositoryMock: MovieRepository {
+        
+        private var movies: [Movie] = []
+        
+        func setMovies(_ movies: [Movie]) {
+            self.movies = movies
+        }
+        
+        func getAll() async throws(RetrieveError) -> [Movie] {
+            return movies
+        }
+    }
+    
+    actor TheaterRepositoryMock: TheaterRepository {
+
+        private var theaters: [Theater] = []
+        
+        func setTheaters(_ theaters: [Theater]) {
+            self.theaters = theaters
+        }
+        
+        func get(byMovieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
+            return theaters
+        }
+    }
+    
+    actor UserScheduleRepositoryMock: UserScheduleRepository {
+        
+        func get() async throws(RetrieveError) -> UserSchedule? {
+            return nil
+        }
+        
+        func save(_ userSchedule: UserSchedule) async throws(CreateError) {
+            
+        }
+    }
+    
     let router = ScheduleSelectionRouterMock()
+    let movieRepository = MovieRepositoryMock()
+    let theaterRepository = TheaterRepositoryMock()
+    let userScheduleRepository = UserScheduleRepositoryMock()
     let viewModel: ScheduleSelectionViewModel
     
     init() {
-        viewModel = ScheduleSelectionViewModelImpl(router: router, movieSchedulesAggregateService: movieSchedulesAggregateService)
+        viewModel = ScheduleSelectionViewModelImpl(router: router, movieRepository: movieRepository, userScheduleRepository: userScheduleRepository, theaterRepository: theaterRepository)
     }
 
     @Test func shouldLoad() async throws {
         // given:
-        let movieSchedulesAggregatesToLoad = [
-            MovieSchedulesAggregate(
-                movie: Movie(id: 1, title: "Punch Drunk Love", duration: TimeInterval(120)),
-                movieSchedules: [
-                    MovieSchedules(movieId: 1, theaterId: 10, schedules: ["14:00"])
-                ],
-                theaters: [
-                    Theater(id: 10, name: "AMC")
-                ],
-                userSelections: []
-            )
-        ]
-        await movieSchedulesAggregateService.setMovieSchedulesAggregates(movieSchedulesAggregatesToLoad)
+        await movieRepository.setMovies([
+            Movie(id: 1, title: "Star Wars", duration: 120),
+            Movie(id: 2, title: "Mad Max", duration: 120),
+            Movie(id: 3, title: "The Godfather", duration: 180),
+        ])
         
+        await theaterRepository.setTheaters([
+            Theater(id: 1, name: "Cinemark", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 1, schedules: ["18:30", "20:30"]),
+                MovieSchedules(movieId: 2, theaterId: 1, schedules: ["15:30", "21:30"]),
+            ]),
+            Theater(id: 2, name: "AMC", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 2, schedules: ["17:00"]),
+                MovieSchedules(movieId: 3, theaterId: 2, schedules: ["20:00"]),
+            ])
+        ])
+
         // when:
         await viewModel.load()
 
         // then:
-        #expect(await viewModel.movieSchedules == movieSchedulesAggregatesToLoad)
+        #expect(await viewModel.movies == [
+            Movie(id: 2, title: "Mad Max", duration: 120),
+            Movie(id: 1, title: "Star Wars", duration: 120),
+            Movie(id: 3, title: "The Godfather", duration: 180),
+        ])
+        #expect(await viewModel.theaters(byMovie: Movie(id: 1, title: "Star Wars", duration: 120)).count == 2)
+        #expect(await viewModel.theaters(byMovie: Movie(id: 2, title: "Mad Max", duration: 120)).count == 1)
+        #expect(await viewModel.theaters(byMovie: Movie(id: 3, title: "The Godfather", duration: 180)).count == 1)
         #expect(await !viewModel.loading)
+    }
+    
+    @Test func shouldReturnTheatersByMovieSortedByName() async {
+        // given:
+        await movieRepository.setMovies([
+            Movie(id: 1, title: "Star Wars", duration: 120),
+            Movie(id: 2, title: "Mad Max", duration: 120),
+            Movie(id: 3, title: "The Godfather", duration: 180),
+        ])
+        
+        await theaterRepository.setTheaters([
+            Theater(id: 1, name: "Cinemark", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 1, schedules: ["18:30", "20:30"]),
+                MovieSchedules(movieId: 2, theaterId: 1, schedules: ["15:30", "21:30"]),
+            ]),
+            Theater(id: 2, name: "AMC", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 2, schedules: ["17:00"]),
+                MovieSchedules(movieId: 3, theaterId: 2, schedules: ["20:00"]),
+            ])
+        ])
+        await viewModel.load()
+
+        // when:
+        let starWarsTheaters = viewModel.theaters(byMovie: Movie(id: 1, title: "Star Wars", duration: 120))
+        
+        // then:
+        #expect(starWarsTheaters == [
+            Theater(id: 2, name: "AMC", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 2, schedules: ["17:00"]),
+                MovieSchedules(movieId: 3, theaterId: 2, schedules: ["20:00"]),
+            ]),
+            Theater(id: 1, name: "Cinemark", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 1, schedules: ["18:30", "20:30"]),
+                MovieSchedules(movieId: 2, theaterId: 1, schedules: ["15:30", "21:30"]),
+            ]),
+        ])
     }
 
 }

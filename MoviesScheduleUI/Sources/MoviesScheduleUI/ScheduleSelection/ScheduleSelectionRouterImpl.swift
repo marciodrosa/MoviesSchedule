@@ -9,7 +9,7 @@ import MoviesScheduleApplication
 
 struct ScheduleSelectionRouterImpl: ScheduleSelectionRouter {
     
-    func goToSummary() async {
+    func goToSummary() {
         
     }
 }

@@ -14,10 +14,7 @@ public struct ScheduleSelectionView: View {
     let viewModel: ScheduleSelectionViewModel
     
     @State
-    private var movieSchedules: [MovieSchedulesAggregate] = []
-    
-    @State
-    private var loading: Bool = false
+    private var loading = false
     
     public init(viewModel: ScheduleSelectionViewModel) {
         self.viewModel = viewModel
@@ -34,8 +31,8 @@ public struct ScheduleSelectionView: View {
                             alignment: .leading,
                             spacing: 0
                         ) {
-                            ForEach(movieSchedules) { movieSchedule in
-                                movieView(movieSchedule)
+                            ForEach(viewModel.movies) { movie in
+                                movieView(movie)
                             }
                         }
                     }
@@ -44,11 +41,9 @@ public struct ScheduleSelectionView: View {
             .toolbar {
                 ToolbarItem {
                     Button("Reload") {
+                        loading = true
                         Task {
-                            loading = true
-                            let vm = viewModel
-                            await vm.load()
-                            movieSchedules = await viewModel.movieSchedules
+                            await viewModel.load()
                             loading = false
                         }
                     }
@@ -58,16 +53,15 @@ public struct ScheduleSelectionView: View {
         
     }
     
-    func movieView(_ movieSchedule: MovieSchedulesAggregate) -> some View {
-        let theatersSchedules: [MovieSchedulesAggregate.Schedules] = movieSchedule.theatersSchedules
+    func movieView(_ movie: Movie) -> some View {
         return VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                Text(movieSchedule.movie.title).font(Font.system(size: 24))
-                Text(String(movieSchedule.movie.duration)).font(Font.system(size: 12))
+                Text(movie.title).font(Font.system(size: 24))
+                Text(String(movie.duration)).font(Font.system(size: 12))
             }
             VStack(alignment: .leading, spacing: 16) {
-                ForEach(theatersSchedules) { theaterSchedule in
-                    theaterSchedulesView(theaterSchedule)
+                ForEach(viewModel.theaters(byMovie: movie)) { theater in
+                    theaterSchedulesView(theater: theater, movie: movie)
                 }
             }
             .frame(maxWidth: CGFloat.infinity)
@@ -83,12 +77,12 @@ public struct ScheduleSelectionView: View {
         .padding(.vertical, 8)
     }
     
-    func theaterSchedulesView(_ theaterSchedule: MovieSchedulesAggregate.Schedules) -> some View {
+    func theaterSchedulesView(theater: Theater, movie: Movie) -> some View {
         VStack(alignment: .leading) {
-            Text(theaterSchedule.theater.name)
+            Text(theater.name)
                 .frame(maxWidth: CGFloat.infinity, alignment: .center)
             HStack {
-                ForEach(theaterSchedule.schedules, id: \String.self) { schedule in
+                ForEach(theater.schedules(byMovie: movie), id: \String.self) { schedule in
                     Toggle(isOn: Binding<Bool>.constant(false)) {
                         Text(schedule)
                     }.toggleStyle(.button)
@@ -107,31 +101,26 @@ public struct ScheduleSelectionView: View {
 }
 
 #Preview {
-    actor ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
+    final class ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
         var loading: Bool = false
         
-        var movieSchedules: [MovieSchedulesAggregate] = [
-            MovieSchedulesAggregate(
-                movie: Movie(id: 1, title: "Star Wars", duration: 130),
-                movieSchedules: [
-                    MovieSchedules(movieId: 1, theaterId: 100, schedules: ["14:30", "18:00"]),
-                    MovieSchedules(movieId: 1, theaterId: 200, schedules: ["16:30"]),
-                ],
-                theaters: [
-                    Theater(id: 100, name: "AMC"),
-                    Theater(id: 200, name: "Cinemark"),
-                ]
-            ),
-            MovieSchedulesAggregate(
-                movie: Movie(id: 2, title: "Mad Max", duration: 120),
-                movieSchedules: [
-                    MovieSchedules(movieId: 2, theaterId: 200, schedules: ["17:30", "21:00"]),
-                ],
-                theaters: [
-                    Theater(id: 200, name: "Cinemark"),
-                ]
-            )
+        var movies: [Movie] = [
+            Movie(id: 1, title: "Star Wars", duration: 130),
+            Movie(id: 2, title: "Mad Max", duration: 120),
         ]
+        
+        var userSchedule: UserSchedule = UserSchedule(items: [])
+        
+        func theaters(byMovie: Movie) -> [Theater] {[
+            Theater(id: 1, name: "AMC", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 1, schedules: ["14:30", "18:00"]),
+                MovieSchedules(movieId: 2, theaterId: 1, schedules: ["16:30"]),
+            ]),
+            Theater(id: 2, name: "Cinemark", movieSchedules: [
+                MovieSchedules(movieId: 1, theaterId: 1, schedules: ["17:30", "21:00"]),
+                MovieSchedules(movieId: 2, theaterId: 1, schedules: ["20:30"]),
+            ]),
+        ]}
         
         func load() async {
             guard !loading else {
@@ -143,7 +132,7 @@ public struct ScheduleSelectionView: View {
         }
         
         func viewSummary() {
-            print("Went to summary")
+            
         }
     }
     

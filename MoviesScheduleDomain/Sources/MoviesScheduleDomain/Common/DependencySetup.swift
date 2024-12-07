@@ -9,13 +9,5 @@ import DependenciesManager
 
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
-        .factory(MovieSchedulesAggregateService.self) { getter in
-            MovieSchedulesAggregateServiceImpl(
-                movieRepository: getter(),
-                movieSchedulesRepository: getter(),
-                theaterRepository: getter(),
-                userSelectionRepository: getter()
-            )
-        },
     ]
 }

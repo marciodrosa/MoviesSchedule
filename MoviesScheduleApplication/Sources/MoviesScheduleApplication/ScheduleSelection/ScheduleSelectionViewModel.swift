@@ -7,23 +7,36 @@
 
 import MoviesScheduleDomain
 
-public protocol ScheduleSelectionViewModel: Sendable {
-    var loading: Bool { get async }
-    var movieSchedules: [MovieSchedulesAggregate] { get async }
+@MainActor
+public protocol ScheduleSelectionViewModel {
+    var loading: Bool { get }
+    var movies: [Movie] { get }
+    var userSchedule: UserSchedule { get }
+    func theaters(byMovie: Movie) -> [Theater]
     func load() async
-    func viewSummary() async
+    func viewSummary()
 }
 
-actor ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
+class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     private let router: ScheduleSelectionRouter
-    private let movieSchedulesAggregateService: MovieSchedulesAggregateService
+    private let movieRepository: MovieRepository
+    private let userScheduleRepository: UserScheduleRepository
+    private let theaterRepository: TheaterRepository
     public private(set) var loading: Bool = false
-    public private(set) var movieSchedules: [MovieSchedulesAggregate] = []
+    public private(set) var movies: [Movie] = []
+    public private(set) var userSchedule: UserSchedule = UserSchedule(items: [])
+    private var theaters: [Theater] = []
     
-    public init(router: ScheduleSelectionRouter, movieSchedulesAggregateService: MovieSchedulesAggregateService) {
+    public init(router: ScheduleSelectionRouter, movieRepository: MovieRepository, userScheduleRepository: UserScheduleRepository, theaterRepository: TheaterRepository) {
         self.router = router
-        self.movieSchedulesAggregateService = movieSchedulesAggregateService
+        self.movieRepository = movieRepository
+        self.userScheduleRepository = userScheduleRepository
+        self.theaterRepository = theaterRepository
+    }
+    
+    func theaters(byMovie movie: Movie) -> [Theater] {
+        return theaters.filter { $0.hasMovie(movie) }.sorted { $0.name < $1.name }
     }
     
     public func load() async {
@@ -31,12 +44,12 @@ actor ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
             return
         }
         loading = true
-        let service = movieSchedulesAggregateService // we neet to set to a local var to avoid a Swift 6 bug
-        movieSchedules = (try? await service.getAllMovieSchedules()) ?? []
+        movies = (try? await movieRepository.getAll())?.sorted { $0.title < $1.title } ?? []
+        theaters = (try? await theaterRepository.get(byMovieIds: movies.map { $0.id })) ?? []
         loading = false
     }
     
-    public func viewSummary() async {
-        await router.goToSummary()
+    public func viewSummary() {
+        router.goToSummary()
     }
 }
