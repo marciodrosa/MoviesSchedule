@@ -6,24 +6,22 @@
 //
 
 import SwiftUI
+import Combine
 import MoviesScheduleApplication
 import MoviesScheduleDomain
 
-public struct ScheduleSelectionView: View {
+public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View {
     
-    let viewModel: ScheduleSelectionViewModel
+    @ObservedObject var viewModel: ViewModel
     
-    @State
-    private var loading = false
-    
-    public init(viewModel: ScheduleSelectionViewModel) {
+    public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
         NavigationView {
             VStack {
-                if loading {
+                if viewModel.loading {
                     ProgressView()
                 } else {
                     ScrollView(.vertical) {
@@ -41,10 +39,8 @@ public struct ScheduleSelectionView: View {
             .toolbar {
                 ToolbarItem {
                     Button("Reload") {
-                        loading = true
                         Task {
                             await viewModel.load()
-                            loading = false
                         }
                     }
                 }
@@ -83,7 +79,7 @@ public struct ScheduleSelectionView: View {
                 .frame(maxWidth: CGFloat.infinity, alignment: .center)
             HStack {
                 ForEach(theater.schedules(byMovie: movie), id: \String.self) { schedule in
-                    Toggle(isOn: Binding<Bool>.constant(false)) {
+                    Toggle(isOn: createScheduleItemBinding(movie: movie, theater: theater, schedule: schedule)) {
                         Text(schedule)
                     }.toggleStyle(.button)
                 }
@@ -98,11 +94,21 @@ public struct ScheduleSelectionView: View {
                 .fill(Color.gray.opacity(0.5))
         }
     }
+    
+    private func createScheduleItemBinding(movie: Movie, theater: Theater, schedule: String) -> Binding<Bool> {
+        return Binding {
+            viewModel.isScheduleSelected(movie: movie, theater: theater, schedule: schedule)
+        } set: { value in
+            viewModel.setScheduleSelected(movie: movie, theater: theater, schedule: schedule, selected: value)
+        }
+
+    }
 }
 
 #Preview {
     final class ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
-        var loading: Bool = false
+        
+        @Published var loading: Bool = false
         
         var movies: [Movie] = [
             Movie(id: 1, title: "Star Wars", duration: 130),
@@ -133,6 +139,14 @@ public struct ScheduleSelectionView: View {
         
         func viewSummary() {
             
+        }
+        
+        func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool {
+            userSchedule.isItemSelected(movie: movie, theater: theater, schedule: schedule)
+        }
+        
+        func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool) {
+            _ = userSchedule.setItemSelected(movie: movie, theater: theater, schedule: schedule, selected: selected)
         }
     }
     

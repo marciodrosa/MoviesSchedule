@@ -15,14 +15,19 @@ public struct UserSchedule: Equatable, Sendable {
     }
     
     /** Toggle the selection of the given schedule, returning true if it ends being selected of false if unselected. */
-    public mutating func toggleScheduleItem(movie: Movie, theater: Theater, schedule: String) -> Bool {
+    public mutating func setItemSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool) -> Bool {
         let item = UserScheduleItem(movieId: movie.id, theaterId: theater.id, schedule: schedule)
-        if let oldSelectionIndex = items.firstIndex(of: item) {
-            items.remove(at: oldSelectionIndex)
-            return false
-        } else {
+        if selected {
+            guard !items.contains(item) else {
+                return true
+            }
             items.append(item)
             return true
+        } else {
+            if let index = items.firstIndex(of: item) {
+                items.remove(at: index)
+            }
+            return false
         }
     }
     

@@ -5,28 +5,31 @@
 //  Created by Marcio Rosa on 01/12/24.
 //
 
+import Foundation
 import MoviesScheduleDomain
 
 @MainActor
-public protocol ScheduleSelectionViewModel {
+public protocol ScheduleSelectionViewModel: ObservableObject {
     var loading: Bool { get }
     var movies: [Movie] { get }
     var userSchedule: UserSchedule { get }
     func theaters(byMovie: Movie) -> [Theater]
     func load() async
     func viewSummary()
+    func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool
+    func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool)
 }
 
-class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
+public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     private let router: ScheduleSelectionRouter
     private let movieRepository: MovieRepository
     private let userScheduleRepository: UserScheduleRepository
     private let theaterRepository: TheaterRepository
-    public private(set) var loading: Bool = false
-    public private(set) var movies: [Movie] = []
-    public private(set) var userSchedule: UserSchedule = UserSchedule(items: [])
-    private var theaters: [Theater] = []
+    @Published public private(set) var loading: Bool = false
+    @Published public private(set) var movies: [Movie] = []
+    @Published public private(set) var userSchedule: UserSchedule = UserSchedule(items: [])
+    @Published private var theaters: [Theater] = []
     
     public init(router: ScheduleSelectionRouter, movieRepository: MovieRepository, userScheduleRepository: UserScheduleRepository, theaterRepository: TheaterRepository) {
         self.router = router
@@ -35,7 +38,7 @@ class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
         self.theaterRepository = theaterRepository
     }
     
-    func theaters(byMovie movie: Movie) -> [Theater] {
+    public func theaters(byMovie movie: Movie) -> [Theater] {
         return theaters.filter { $0.hasMovie(movie) }.sorted { $0.name < $1.name }
     }
     
@@ -51,5 +54,13 @@ class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     public func viewSummary() {
         router.goToSummary()
+    }
+    
+    public func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool {
+        userSchedule.isItemSelected(movie: movie, theater: theater, schedule: schedule)
+    }
+    
+    public func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool) {
+        _ = userSchedule.setItemSelected(movie: movie, theater: theater, schedule: schedule, selected: selected)
     }
 }

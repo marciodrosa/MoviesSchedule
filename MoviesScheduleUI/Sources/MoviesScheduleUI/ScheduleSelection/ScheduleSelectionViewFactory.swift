@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DependenciesManager
+import MoviesScheduleApplication
 
 @MainActor
 public struct ScheduleSelectionViewFactory {
@@ -14,7 +15,7 @@ public struct ScheduleSelectionViewFactory {
     public init() {
     }
     
-    public func createView() -> ScheduleSelectionView {
-        ScheduleSelectionView(viewModel: DependenciesManager.getter!.mainActorGet())
+    public func createView() -> ScheduleSelectionView<ScheduleSelectionViewModelImpl> {
+        ScheduleSelectionView(viewModel: ScheduleSelectionViewModelImpl(router: DependenciesManager.getter!(), movieRepository: DependenciesManager.getter!(), userScheduleRepository: DependenciesManager.getter!(), theaterRepository: DependenciesManager.getter!()))
     }
 }

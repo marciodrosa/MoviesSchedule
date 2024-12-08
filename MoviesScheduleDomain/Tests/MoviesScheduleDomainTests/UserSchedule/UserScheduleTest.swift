@@ -35,22 +35,40 @@ class UserScheduleTest {
         #expect(!userSchedule.isItemSelected(movie: movie2, theater: theater1, schedule: "16:30"))
     }
     
-    @Test func shouldToggleAndSelectAMovieTheaterAndSchedule() async throws {
+    @Test func shouldSelectAMovieTheaterAndSchedule() async throws {
         // when:
-        let result = userSchedule.toggleScheduleItem(movie: movie3, theater: theater3, schedule: "20:00")
+        let result = userSchedule.setItemSelected(movie: movie3, theater: theater3, schedule: "20:00", selected: true)
         
         // then:
         #expect(result)
         #expect(userSchedule.isItemSelected(movie: movie3, theater: theater3, schedule: "20:00"))
     }
     
-    @Test func shouldToggleAndUnselectAMovieTheaterAndSchedule() async throws {
+    @Test func shouldSelectAMovieTheaterAndScheduleAlreadySelected() async throws {
         // when:
-        let result = userSchedule.toggleScheduleItem(movie: movie1, theater: theater1, schedule: "16:30")
+        let result = userSchedule.setItemSelected(movie: movie1, theater: theater1, schedule: "16:30", selected: true)
+        
+        // then:
+        #expect(result)
+        #expect(userSchedule.isItemSelected(movie: movie1, theater: theater1, schedule: "16:30"))
+    }
+    
+    @Test func shouldUnselectAMovieTheaterAndSchedule() async throws {
+        // when:
+        let result = userSchedule.setItemSelected(movie: movie1, theater: theater1, schedule: "16:30", selected: false)
         
         // then:
         #expect(!result)
         #expect(!userSchedule.isItemSelected(movie: movie1, theater: theater1, schedule: "16:30"))
+    }
+    
+    @Test func shouldUnselectAMovieTheaterAndScheduleAlreadyUnselected() async throws {
+        // when:
+        let result = userSchedule.setItemSelected(movie: movie3, theater: theater3, schedule: "20:00", selected: false)
+        
+        // then:
+        #expect(!result)
+        #expect(!userSchedule.isItemSelected(movie: movie3, theater: theater3, schedule: "20:00"))
     }
 
 }
