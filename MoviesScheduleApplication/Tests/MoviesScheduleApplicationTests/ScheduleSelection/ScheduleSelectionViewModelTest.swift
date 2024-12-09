@@ -62,7 +62,7 @@ class ScheduleSelectionViewModelTest {
     let movieRepository = MovieRepositoryMock()
     let theaterRepository = TheaterRepositoryMock()
     let userScheduleRepository = UserScheduleRepositoryMock()
-    let viewModel: ScheduleSelectionViewModel
+    let viewModel: ScheduleSelectionViewModelImpl
     
     init() {
         viewModel = ScheduleSelectionViewModelImpl(router: router, movieRepository: movieRepository, userScheduleRepository: userScheduleRepository, theaterRepository: theaterRepository)
@@ -136,6 +136,62 @@ class ScheduleSelectionViewModelTest {
                 MovieSchedules(movieId: 2, theaterId: 1, schedules: ["15:30", "21:30"]),
             ]),
         ])
+    }
+    
+    @Test func shouldSelectScheduleInUserSchedule() {
+        // given:
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
+        
+        //  when:
+        viewModel.setScheduleSelected(
+            movie: movie,
+            theater: theater,
+            schedule: "14:30",
+            selected: true
+        )
+        
+        // then:
+        #expect(viewModel.userSchedule.isItemSelected(movie: movie, theater: theater, schedule: "14:30"))
+    }
+    
+    @Test func shouldUnselectScheduleInUserSchedule() {
+        // given:
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
+        viewModel.setScheduleSelected(
+            movie: movie,
+            theater: theater,
+            schedule: "14:30",
+            selected: true
+        )
+        
+        //  when:
+        viewModel.setScheduleSelected(
+            movie: movie,
+            theater: theater,
+            schedule: "14:30",
+            selected: false
+        )
+        
+        // then:
+        #expect(!viewModel.userSchedule.isItemSelected(movie: movie, theater: theater, schedule: "14:30"))
+    }
+    
+    @Test func shouldReturnIfScheduleIsSelectedInUserSchedule() {
+        // given:
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
+        viewModel.setScheduleSelected(
+            movie: movie,
+            theater: theater,
+            schedule: "14:30",
+            selected: true
+        )
+        
+        //  then:
+        #expect(viewModel.isScheduleSelected(movie: movie, theater: theater, schedule: "14:30"))
+        #expect(!viewModel.isScheduleSelected(movie: movie, theater: theater, schedule: "16:30"))
     }
 
 }

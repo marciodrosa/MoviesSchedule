@@ -8,7 +8,7 @@
 /** Entity and aggregate root that contains the selected schedules by the user. */
 public struct UserSchedule: Equatable, Sendable {
     
-    private var items: [UserScheduleItem]
+    public private(set) var items: [UserScheduleItem]
     
     public init(items: [UserScheduleItem]) {
         self.items = items
