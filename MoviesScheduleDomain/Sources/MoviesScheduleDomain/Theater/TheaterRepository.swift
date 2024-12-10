@@ -7,4 +7,5 @@
 
 public protocol TheaterRepository: Sendable {
     func get(byMovieIds: [Int64]) async throws(RetrieveError) -> [Theater]
+    func get(byIds: [Int64]) async throws(RetrieveError) -> [Theater]
 }

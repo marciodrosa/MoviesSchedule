@@ -7,51 +7,42 @@
 
 import Foundation
 
-public enum ItineraryItem {
-    case movie(movie: Movie, theater: Theater, schedule: String)
-    case movieWithSameScheduleConflict(movie: Movie, theater: Theater, schedule: String)
-    case movieWithOverlappingScheduleConflict(movie: Movie, theater: Theater, schedule: String, overlappingDuration: Int)
-    case interval(timeOfDay: String, duration: Int)
-    case goToTheater(timeOfDay: String, duration: Int)
+public struct ItineraryItem: Equatable {
+    let startAt: String
+    let endAt: String
+    let duration: Int
+    let itineraryItemType: ItineraryItemType
     
-    var timeOfDay: String {
-        switch self {
-        case .movie(movie: _, theater: _, schedule: let schedule):
-            schedule
-        case .movieWithSameScheduleConflict(movie: _, theater: _, schedule: let schedule):
-            schedule
-        case .movieWithOverlappingScheduleConflict(movie: _, theater: _, schedule: let schedule, overlappingDuration: _):
-            schedule
-        case .interval(timeOfDay: let timeOfDay, duration: _):
-            timeOfDay
-        case .goToTheater(timeOfDay: let timeOfDay, duration: _):
-            timeOfDay
-        }
-    }
-    
-    var duration: Int {
-        switch self {
-        case .movie(movie: let movie, theater: _, schedule: _):
-            movie.duration
-        case .movieWithSameScheduleConflict(movie: let movie, theater: _, schedule: _):
-            movie.duration
-        case .movieWithOverlappingScheduleConflict(movie: let movie, theater: _, schedule: _, overlappingDuration: _):
-            movie.duration
-        case .interval(timeOfDay: _, duration: let duration):
-            duration
-        case .goToTheater(timeOfDay: _, duration: let duration):
-            duration
-        }
-    }
-    
-    var endTimeOfDay: String {
+    public init(startAt: String, endAt: String, itineraryItemType: ItineraryItemType) {
+        self.startAt = startAt
+        self.endAt = endAt
+        self.itineraryItemType = itineraryItemType
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("HH:mm")
-        let date = dateFormatter.date(from: timeOfDay)
-        guard let date else {
-            return "00:00"
+        let startDate = dateFormatter.date(from: startAt)
+        let endDate = dateFormatter.date(from: endAt)
+        if let startDate, let endDate {
+            duration = Int(endDate.timeIntervalSince(startDate) / 60)
+        } else {
+            duration = 0
         }
-        let endingDate = date.addingTimeInterval(Double(duration) * 60)
-        return dateFormatter.string(from: endingDate)
+    }
+    
+    public init(startAt: String, duration: Int, itineraryItemType: ItineraryItemType) {
+        self.startAt = startAt
+        self.duration = duration
+        self.itineraryItemType = itineraryItemType
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("HH:mm")
+        let startAtDate = dateFormatter.date(from: startAt)
+        if let startAtDate {
+            endAt = dateFormatter.string(from: startAtDate.addingTimeInterval(Double(duration) * 60))
+        } else {
+            endAt = startAt
+        }
+    }
+    
+    func withNewItineraryItemType(_ newItineraryItemType: ItineraryItemType) -> ItineraryItem {
+        ItineraryItem(startAt: startAt, endAt: endAt, itineraryItemType: newItineraryItemType)
     }
 }

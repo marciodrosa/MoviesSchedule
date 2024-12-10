@@ -10,31 +10,39 @@ import Testing
 
 struct ItineraryItemTest {
     
-    let movie = Movie(id: 1, title: "Star Wars", duration: 125)
-    let theater = Theater(id: 1, name: "AMC")
-
-    @Test func shouldReturnTimeOfDayOfItineraryItem() async throws {
-        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "13:50").timeOfDay == "13:50")
-        #expect(ItineraryItem.movieWithSameScheduleConflict(movie: movie, theater: theater, schedule: "13:50").timeOfDay == "13:50")
-        #expect(ItineraryItem.movieWithOverlappingScheduleConflict(movie: movie, theater: theater, schedule: "13:50", overlappingDuration: 30).timeOfDay == "13:50")
-        #expect(ItineraryItem.goToTheater(timeOfDay: "15:20", duration: 60).timeOfDay == "15:20")
-        #expect(ItineraryItem.interval(timeOfDay: "15:20", duration: 60).timeOfDay == "15:20")
+    @Test func shouldInitWithEndTime() {
+        // when:
+        let result = ItineraryItem(startAt: "14:50", endAt: "16:55", itineraryItemType: .interval)
+        
+        // then:
+        #expect(result.startAt == "14:50")
+        #expect(result.endAt == "16:55")
+        #expect(result.itineraryItemType == .interval)
+        #expect(result.duration == 125)
     }
     
-    @Test func shouldReturnDurationOfItineraryItem() async throws {
-        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "13:50").duration == 125)
-        #expect(ItineraryItem.movieWithSameScheduleConflict(movie: movie, theater: theater, schedule: "13:50").duration == 125)
-        #expect(ItineraryItem.movieWithOverlappingScheduleConflict(movie: movie, theater: theater, schedule: "13:50", overlappingDuration: 30).duration == 125)
-        #expect(ItineraryItem.goToTheater(timeOfDay: "15:20", duration: 60).duration == 60)
-        #expect(ItineraryItem.interval(timeOfDay: "15:20", duration: 60).duration == 60)
+    @Test func shouldInitWithDuration() {
+        // when:
+        let result = ItineraryItem(startAt: "14:50", duration: 125, itineraryItemType: .interval)
+        
+        // then:
+        #expect(result.startAt == "14:50")
+        #expect(result.endAt == "16:55")
+        #expect(result.itineraryItemType == .interval)
+        #expect(result.duration == 125)
     }
     
-    @Test func shouldReturnEndTimeOfDayOfItineraryItem() async throws {
-        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "13:50").endTimeOfDay == "15:55")
-        #expect(ItineraryItem.movieWithSameScheduleConflict(movie: movie, theater: theater, schedule: "13:50").endTimeOfDay == "15:55")
-        #expect(ItineraryItem.movieWithOverlappingScheduleConflict(movie: movie, theater: theater, schedule: "13:50", overlappingDuration: 30).endTimeOfDay == "15:55")
-        #expect(ItineraryItem.goToTheater(timeOfDay: "15:20", duration: 60).endTimeOfDay == "16:20")
-        #expect(ItineraryItem.interval(timeOfDay: "15:20", duration: 60).endTimeOfDay == "16:20")
+    @Test func shouldCreateNewItemWithNewItemType() {
+        // given:
+        let item = ItineraryItem(startAt: "14:50", duration: 125, itineraryItemType: .interval)
+        
+        // when:
+        let newItem = item.withNewItineraryItemType(.intervalWithChangeOfTheater(theater: Theater(id: 1, name: "AMC")))
+        
+        // then:
+        #expect(newItem.startAt == "14:50")
+        #expect(newItem.endAt == "16:55")
+        #expect(newItem.itineraryItemType == .intervalWithChangeOfTheater(theater: Theater(id: 1, name: "AMC")))
+        #expect(newItem.duration == 125)
     }
-
 }

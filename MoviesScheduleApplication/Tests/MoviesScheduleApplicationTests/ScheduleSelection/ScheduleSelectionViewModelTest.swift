@@ -32,6 +32,10 @@ class ScheduleSelectionViewModelTest {
         func getAll() async throws(RetrieveError) -> [Movie] {
             return movies
         }
+        
+        func get(byIds: [Int64]) async throws(RetrieveError) -> [Movie] {
+            return movies
+        }
     }
     
     actor TheaterRepositoryMock: TheaterRepository {
@@ -43,6 +47,10 @@ class ScheduleSelectionViewModelTest {
         }
         
         func get(byMovieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
+            return theaters
+        }
+        
+        func get(byIds: [Int64]) async throws(RetrieveError) -> [Theater] {
             return theaters
         }
     }
