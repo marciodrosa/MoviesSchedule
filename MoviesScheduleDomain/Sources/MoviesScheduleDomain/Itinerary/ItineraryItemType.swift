@@ -8,9 +8,6 @@
 import Foundation
 
 public enum ItineraryItemType: Equatable {
-    case movie(movie: Movie, theater: Theater)
-    case movieWithSameScheduleConflict(movie: Movie, theater: Theater)
-    case movieWithOverlappingScheduleConflict(movie: Movie, theater: Theater)
-    case interval
-    case intervalWithChangeOfTheater(theater: Theater)
+    case movie(movie: Movie, theater: Theater, conflicts: [ItineraryConflict] = [])
+    case interval(newTheater: Theater? = nil)
 }

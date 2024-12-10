@@ -7,6 +7,7 @@
 
 import Foundation
 
+/** Element of an itinerary with start and end times that could represent things like a scheduled selected movie or an interval between movies. */
 public struct ItineraryItem: Equatable {
     let startAt: String
     let endAt: String
