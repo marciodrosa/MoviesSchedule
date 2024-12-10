@@ -8,20 +8,25 @@
 import Foundation
 
 public protocol ItineraryService {
-    func createItinerary(fromUserSchedule: UserSchedule) async -> Itinerary
+    func createItinerary() async -> Itinerary
 }
 
 struct ItineraryServiceImpl: ItineraryService {
     
     private let movieRepository: MovieRepository
     private let theaterRepository: TheaterRepository
+    private let userScheduleRepository: UserScheduleRepository
     
-    init(movieRepository: MovieRepository, theaterRepository: TheaterRepository) {
+    init(movieRepository: MovieRepository, theaterRepository: TheaterRepository, userScheduleRepository: UserScheduleRepository) {
         self.movieRepository = movieRepository
         self.theaterRepository = theaterRepository
+        self.userScheduleRepository = userScheduleRepository
     }
     
-    public func createItinerary(fromUserSchedule userSchedule: UserSchedule) async -> Itinerary {
+    public func createItinerary() async -> Itinerary {
+        guard let userSchedule = try? await userScheduleRepository.get() else {
+            return Itinerary(items: [])
+        }
         let movieItems = await createItineraryWithMovieItemsOnly(fromUserSchedule: userSchedule)
         let intervalItems = createIntervalsItems(betweeenItems: movieItems)
         let allItemsSorted = (movieItems + intervalItems).sorted { $0.startAt < $1.startAt }

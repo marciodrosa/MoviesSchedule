@@ -44,14 +44,29 @@ struct ItineraryServiceTest {
         }
     }
     
+    actor UserScheduleRepositoryMock: UserScheduleRepository {
+        
+        private var userSchedule: UserSchedule = UserSchedule(items: [])
+        
+        func get() async throws(RetrieveError) -> UserSchedule? {
+            return userSchedule
+        }
+        
+        func save(_ userSchedule: UserSchedule) async throws(CreateError) {
+            self.userSchedule = userSchedule
+        }
+    }
+    
     private let itineraryService: ItineraryServiceImpl
     private let movieRepository: MovieRepositoryMock
     private let theaterRepository: TheaterRepositoryMock
+    private let userScheduleRepository: UserScheduleRepositoryMock
 
     init() {
         movieRepository = MovieRepositoryMock()
         theaterRepository = TheaterRepositoryMock()
-        itineraryService = ItineraryServiceImpl(movieRepository: movieRepository, theaterRepository: theaterRepository)
+        userScheduleRepository = UserScheduleRepositoryMock()
+        itineraryService = ItineraryServiceImpl(movieRepository: movieRepository, theaterRepository: theaterRepository, userScheduleRepository: userScheduleRepository)
     }
     
     @Test func shouldCreateItineraryFromUserSchedule() async throws {
@@ -67,9 +82,10 @@ struct ItineraryServiceTest {
             UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
             UserScheduleItem(movieId: 2, theaterId: 10, schedule: "21:00")
         ])
+        try await userScheduleRepository.save(userSchedule)
         
         // when:
-        let itinerary = await itineraryService.createItinerary(fromUserSchedule: userSchedule)
+        let itinerary = await itineraryService.createItinerary()
         
         // then:
         #expect(itinerary.items == [
