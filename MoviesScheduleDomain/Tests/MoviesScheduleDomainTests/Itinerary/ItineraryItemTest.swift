@@ -10,39 +10,45 @@ import Testing
 
 struct ItineraryItemTest {
     
-    @Test func shouldInitWithEndTime() {
-        // when:
-        let result = ItineraryItem(startAt: "14:50", endAt: "16:55", itineraryItemType: .interval())
-        
-        // then:
-        #expect(result.startAt == "14:50")
-        #expect(result.endAt == "16:55")
-        #expect(result.itineraryItemType == .interval())
-        #expect(result.duration == 125)
-    }
-    
-    @Test func shouldInitWithDuration() {
-        // when:
-        let result = ItineraryItem(startAt: "14:50", duration: 125, itineraryItemType: .interval())
-        
-        // then:
-        #expect(result.startAt == "14:50")
-        #expect(result.endAt == "16:55")
-        #expect(result.itineraryItemType == .interval())
-        #expect(result.duration == 125)
-    }
-    
-    @Test func shouldCreateNewItemWithNewItemType() {
+    @Test func shouldReturnAssociatedMovie() {
         // given:
-        let item = ItineraryItem(startAt: "14:50", duration: 125, itineraryItemType: .interval())
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
         
-        // when:
-        let newItem = item.withNewItineraryItemType(.interval(newTheater: Theater(id: 1, name: "AMC")))
+        // then
+        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "14:00").movie == movie)
+        #expect(ItineraryItem.movieWithConflicts(movie: movie, theater: theater, schedule: "14:00", conflicts: []).movie == movie)
+        #expect(ItineraryItem.goToOtherTheater(availableTime: 10, theater: theater).movie == nil)
+        #expect(ItineraryItem.goToOtherTheaterWithoutTime(theater: theater).movie == nil)
+        #expect(ItineraryItem.interval(duration: 10).movie == nil)
+        #expect(ItineraryItem.noInterval.movie == nil)
+    }
+    
+    @Test func shouldReturnAssociatedTheater() {
+        // given:
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
         
-        // then:
-        #expect(newItem.startAt == "14:50")
-        #expect(newItem.endAt == "16:55")
-        #expect(newItem.itineraryItemType == .interval(newTheater: Theater(id: 1, name: "AMC")))
-        #expect(newItem.duration == 125)
+        // then
+        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "14:00").theater == theater)
+        #expect(ItineraryItem.movieWithConflicts(movie: movie, theater: theater, schedule: "14:00", conflicts: []).theater == theater)
+        #expect(ItineraryItem.goToOtherTheater(availableTime: 10, theater: theater).theater == theater)
+        #expect(ItineraryItem.goToOtherTheaterWithoutTime(theater: theater).theater == theater)
+        #expect(ItineraryItem.interval(duration: 10).theater == nil)
+        #expect(ItineraryItem.noInterval.theater == nil)
+    }
+    
+    @Test func shouldReturnItineraryItemDuration() {
+        // given:
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
+        
+        // then
+        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "14:00").duration == 120)
+        #expect(ItineraryItem.movieWithConflicts(movie: movie, theater: theater, schedule: "14:00", conflicts: []).duration == 120)
+        #expect(ItineraryItem.goToOtherTheater(availableTime: 10, theater: theater).duration == 10)
+        #expect(ItineraryItem.goToOtherTheaterWithoutTime(theater: theater).duration == 0)
+        #expect(ItineraryItem.interval(duration: 10).duration == 10)
+        #expect(ItineraryItem.noInterval.duration == 0)
     }
 }

@@ -57,5 +57,22 @@ struct TheaterRepositoryFromFileTest {
             ])
         ])
     }
+    
+    @Test func shouldGetByIdsFromJsonFile() async throws {
+        // when:
+        let result = try! await repository.get(byIds: [1, 3])
+        
+        // then:
+        #expect(result == [
+            Theater(id: 1, name: "AMC", movieSchedules: [
+                MovieSchedules(movieId: 10, theaterId: 1, schedules: ["14:00", "16:00"]),
+                MovieSchedules(movieId: 20, theaterId: 1, schedules: ["17:00", "19:00"]),
+            ]),
+            Theater(id: 3, name: "New Beverly", movieSchedules: [
+                MovieSchedules(movieId: 10, theaterId: 3, schedules: ["15:30"]),
+                MovieSchedules(movieId: 30, theaterId: 3, schedules: ["16:30"]),
+            ])
+        ])
+    }
 
 }

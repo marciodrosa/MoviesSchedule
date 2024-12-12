@@ -19,4 +19,8 @@ actor MovieRepositoryFromFile: MovieRepository {
     func getAll() async throws(RetrieveError) -> [Movie] {
         return try await jsonResourceFileLoader.load()
     }
+    
+    func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Movie] {
+        return try await jsonResourceFileLoader.load().filter { ids.contains($0.id) }
+    }
 }

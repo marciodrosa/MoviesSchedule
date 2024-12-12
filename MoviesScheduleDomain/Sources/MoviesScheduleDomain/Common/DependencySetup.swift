@@ -9,6 +9,7 @@ import DependenciesManager
 
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
-        .factory(ItineraryService.self) { getter in ItineraryServiceImpl(movieRepository: getter(), theaterRepository: getter(), userScheduleRepository: getter()) }
+        .factory(ItineraryService.self) { getter in ItineraryServiceImpl(userScheduleRepository: getter(), userScheduleService: getter()) },
+        .factory(UserScheduleService.self) { getter in UserScheduleServiceImpl(movieRepository: getter(), theaterRepository: getter()) }
     ]
 }

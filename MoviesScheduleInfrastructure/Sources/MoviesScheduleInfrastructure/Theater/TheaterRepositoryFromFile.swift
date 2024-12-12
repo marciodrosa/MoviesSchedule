@@ -21,11 +21,21 @@ actor TheaterRepositoryFromFile: TheaterRepository {
         let allSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
         let movieSchedules = allSchedules.filter { movieIds.contains($0.movieId) }
         let theaterIds = movieSchedules.map { $0.theaterId }
+        return mountAggregate(allTheaters: allTheaters, allSchedules: movieSchedules, filterByIds: theaterIds)
+    }
+    
+    func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Theater] {
+        let allTheaters: [Theater] = try await jsonResourceFileLoader.load()
+        let allSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
+        return mountAggregate(allTheaters: allTheaters, allSchedules: allSchedules, filterByIds: ids)
+    }
+    
+    private func mountAggregate(allTheaters: [Theater], allSchedules: [MovieSchedules], filterByIds ids: [Int64]) -> [Theater] {
         return allTheaters
-            .filter { theaterIds.contains($0.id) }
+            .filter { ids.contains($0.id) }
             .map { theater in
                 var theaterWithSchedules = theater
-                theaterWithSchedules.movieSchedules = movieSchedules.filter { $0.theaterId == theater.id }
+                theaterWithSchedules.movieSchedules = allSchedules.filter { $0.theaterId == theater.id }
                 return theaterWithSchedules
             }
     }

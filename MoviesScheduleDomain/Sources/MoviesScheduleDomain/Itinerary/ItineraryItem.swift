@@ -8,42 +8,54 @@
 import Foundation
 
 /** Element of an itinerary with start and end times that could represent things like a scheduled selected movie or an interval between movies. */
-public struct ItineraryItem: Equatable {
-    let startAt: String
-    let endAt: String
-    let duration: Int
-    let itineraryItemType: ItineraryItemType
+public enum ItineraryItem: Equatable {
+    case movie(movie: Movie, theater: Theater, schedule: String)
+    case movieWithConflicts(movie: Movie, theater: Theater, schedule: String, conflicts: [ItineraryConflict])
+    case interval(duration: Int)
+    case noInterval
+    case goToOtherTheater(availableTime: Int, theater: Theater)
+    case goToOtherTheaterWithoutTime(theater: Theater)
     
-    public init(startAt: String, endAt: String, itineraryItemType: ItineraryItemType) {
-        self.startAt = startAt
-        self.endAt = endAt
-        self.itineraryItemType = itineraryItemType
-        let dateFormatter = DateFormatter()
-        dateFormatter.setLocalizedDateFormatFromTemplate("HH:mm")
-        let startDate = dateFormatter.date(from: startAt)
-        let endDate = dateFormatter.date(from: endAt)
-        if let startDate, let endDate {
-            duration = Int(endDate.timeIntervalSince(startDate) / 60)
-        } else {
-            duration = 0
+    var movie: Movie? {
+        switch self {
+        case .movie(movie: let movie, _, _):
+            movie
+        case .movieWithConflicts(movie: let movie, _, _, _):
+            movie
+        case .interval(_), .noInterval, .goToOtherTheater(_, _), .goToOtherTheaterWithoutTime(_):
+            nil
         }
     }
     
-    public init(startAt: String, duration: Int, itineraryItemType: ItineraryItemType) {
-        self.startAt = startAt
-        self.duration = duration
-        self.itineraryItemType = itineraryItemType
-        let dateFormatter = DateFormatter()
-        dateFormatter.setLocalizedDateFormatFromTemplate("HH:mm")
-        let startAtDate = dateFormatter.date(from: startAt)
-        if let startAtDate {
-            endAt = dateFormatter.string(from: startAtDate.addingTimeInterval(Double(duration) * 60))
-        } else {
-            endAt = startAt
+    var theater: Theater? {
+        switch self {
+        case .movie(_, theater: let theater, _):
+            theater
+        case .movieWithConflicts(_, theater: let theater, _, _):
+            theater
+        case .interval(_), .noInterval:
+            nil
+        case .goToOtherTheater(_, theater: let theater):
+            theater
+        case .goToOtherTheaterWithoutTime(theater: let theater):
+            theater
         }
     }
     
-    func withNewItineraryItemType(_ newItineraryItemType: ItineraryItemType) -> ItineraryItem {
-        ItineraryItem(startAt: startAt, endAt: endAt, itineraryItemType: newItineraryItemType)
+    var duration: Int {
+        switch self {
+        case .movie(movie: let movie, theater: let theater, schedule: let schedule):
+            movie.duration
+        case .movieWithConflicts(movie: let movie, theater: let theater, schedule: let schedule, conflicts: let conflicts):
+            movie.duration
+        case .interval(duration: let duration):
+            duration
+        case .noInterval:
+            0
+        case .goToOtherTheater(availableTime: let availableTime, theater: let theater):
+            availableTime
+        case .goToOtherTheaterWithoutTime(theater: let theater):
+            0
+        }
     }
 }
