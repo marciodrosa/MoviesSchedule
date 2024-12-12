@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol UserScheduleService {
+public protocol UserScheduleService: Sendable {
     func getItemsData(_ userSchedule: UserSchedule) async -> [UserScheduleItemData]
 }
 

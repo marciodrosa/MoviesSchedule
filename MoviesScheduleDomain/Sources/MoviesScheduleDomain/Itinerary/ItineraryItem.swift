@@ -8,7 +8,7 @@
 import Foundation
 
 /** Element of an itinerary with start and end times that could represent things like a scheduled selected movie or an interval between movies. */
-public enum ItineraryItem: Equatable {
+public enum ItineraryItem: Equatable, Sendable {
     case movie(movie: Movie, theater: Theater, schedule: String)
     case movieWithConflicts(movie: Movie, theater: Theater, schedule: String, conflicts: [ItineraryConflict])
     case interval(duration: Int)
