@@ -45,8 +45,11 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
                     }
                 }
             }
+        }.onAppear {
+            Task {
+                await viewModel.load()
+            }
         }
-        
     }
     
     func movieView(_ movie: Movie) -> some View {

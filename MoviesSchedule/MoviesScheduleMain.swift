@@ -16,7 +16,7 @@ struct MoviesScheduleMain {
     
     static func main() {
         setupDependencies()
-        MoviesScheduleApp.main()
+        MoviesScheduleUIApp.main()
     }
     
     static func setupDependencies() {

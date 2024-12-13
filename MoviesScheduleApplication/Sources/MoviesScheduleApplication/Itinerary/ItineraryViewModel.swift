@@ -21,7 +21,7 @@ public class ItineraryViewModelImpl: ItineraryViewModel{
     @Published public private(set) var loading: Bool = false
     @Published public private(set) var itinerary: Itinerary = Itinerary(items: [])
     
-    init(itineraryService: ItineraryService) {
+    public init(itineraryService: ItineraryService) {
         self.itineraryService = itineraryService
     }
     

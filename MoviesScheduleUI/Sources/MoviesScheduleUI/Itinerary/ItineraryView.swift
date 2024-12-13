@@ -18,12 +18,19 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     }
     
     var body: some View {
-        if viewModel.loading {
-            ProgressView()
-        } else if viewModel.itinerary.items.count == 0 {
-            emptyState
-        } else {
-            content
+        VStack {
+            if viewModel.loading {
+                ProgressView()
+            } else if viewModel.itinerary.items.count == 0 {
+                emptyState
+            } else {
+                content
+            }
+        }
+        .onAppear {
+            Task {
+                await viewModel.load()
+            }
         }
     }
     

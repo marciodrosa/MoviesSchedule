@@ -10,12 +10,14 @@ import DependenciesManager
 import MoviesScheduleApplication
 
 @MainActor
-public struct ScheduleSelectionViewFactory {
+protocol ScheduleSelectionViewFactory {
+    func createView() -> any View
+}
+
+@MainActor
+struct ScheduleSelectionViewFactoryImpl: ScheduleSelectionViewFactory {
     
-    public init() {
-    }
-    
-    public func createView() -> ScheduleSelectionView<ScheduleSelectionViewModelImpl> {
-        ScheduleSelectionView(viewModel: ScheduleSelectionViewModelImpl(router: DependenciesManager.getter!(), movieRepository: DependenciesManager.getter!(), userScheduleRepository: DependenciesManager.getter!(), theaterRepository: DependenciesManager.getter!()))
+    public func createView() -> any View {
+        ScheduleSelectionView(viewModel: ScheduleSelectionViewModelImpl(router: DependenciesManager.getter!.mainActorGet(), movieRepository: DependenciesManager.getter!(), userScheduleRepository: DependenciesManager.getter!(), theaterRepository: DependenciesManager.getter!()))
     }
 }
