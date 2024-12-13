@@ -18,6 +18,16 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     }
     
     var body: some View {
+        if viewModel.loading {
+            ProgressView()
+        } else if viewModel.itinerary.items.count == 0 {
+            emptyState
+        } else {
+            content
+        }
+    }
+    
+    var content: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 ForEach(0..<viewModel.itinerary.items.count, id: \.self) { i in
@@ -39,6 +49,18 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 }
             }
         }
+    }
+    
+    var emptyState: some View {
+        VStack(alignment: .center, spacing: 48) {
+            Image(systemName: "number")
+                .resizable()
+                .frame(width: 48, height: 48)
+            Text("No itinerary to show.")
+            Text("Go to the Schedule tab and select the movies you want to see to create your itinerary.")
+                .multilineTextAlignment(.center)
+        }
+        .padding(.all, 40)
     }
     
     func movieView(movie: Movie, theater: Theater, schedule: String, conflicts: [ItineraryConflict] = []) -> some View {
