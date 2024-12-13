@@ -1,5 +1,5 @@
 //
-//  MovieRepositoryFromFile.swift
+//  MovieFromFileRepository.swift
 //  MoviesScheduleInfrastructure
 //
 //  Created by Marcio Rosa on 03/12/24.
@@ -8,7 +8,7 @@
 import Foundation
 import MoviesScheduleDomain
 
-actor MovieRepositoryFromFile: MovieRepository {
+actor MovieFromFileRepository: MovieRepository {
     
     let jsonResourceFileLoader: JsonResourceFileLoader
     

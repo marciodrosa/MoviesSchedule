@@ -11,8 +11,8 @@ import MoviesScheduleDomain
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
         .factory(JsonResourceFileLoader.self) { _ in JsonResourceFileLoaderImpl() },
-        .factory(MovieRepository.self) { getter in MovieRepositoryFromFile(jsonResourceFileLoader: getter()) },
-        .factory(TheaterRepository.self) { getter in TheaterRepositoryFromFile(jsonResourceFileLoader: getter()) },
+        .factory(MovieRepository.self) { getter in MovieFromFileRepository(jsonResourceFileLoader: getter()) },
+        .factory(TheaterRepository.self) { getter in TheaterFromFileRepository(jsonResourceFileLoader: getter()) },
         .factory(UserScheduleRepository.self) { getter in UserScheduleCoreDataRepository() },
     ]
 }

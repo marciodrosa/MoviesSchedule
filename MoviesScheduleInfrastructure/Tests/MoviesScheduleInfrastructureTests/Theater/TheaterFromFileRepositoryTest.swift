@@ -1,5 +1,5 @@
 //
-//  TheaterRepositoryFromFileTest.swift
+//  TheaterFromFileRepositoryTest.swift
 //  MoviesScheduleInfrastructure
 //
 //  Created by Marcio Rosa on 04/12/24.
@@ -9,7 +9,7 @@ import Testing
 @testable import MoviesScheduleInfrastructure
 import MoviesScheduleDomain
 
-struct TheaterRepositoryFromFileTest {
+struct TheaterFromFileRepositoryTest {
     
     static let mockedTheaterData = [
         Theater(id: 1, name: "AMC"),
@@ -37,10 +37,10 @@ struct TheaterRepositoryFromFileTest {
         }
     }
     
-    let repository: TheaterRepositoryFromFile
+    let repository: TheaterFromFileRepository
     
     init() {
-        repository = TheaterRepositoryFromFile(jsonResourceFileLoader: JsonResourceFileLoaderMock())
+        repository = TheaterFromFileRepository(jsonResourceFileLoader: JsonResourceFileLoaderMock())
     }
 
     @Test func shouldGetByMovieIdsFromJsonFile() async throws {

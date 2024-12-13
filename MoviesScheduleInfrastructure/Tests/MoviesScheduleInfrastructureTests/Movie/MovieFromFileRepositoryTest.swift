@@ -1,5 +1,5 @@
 //
-//  MovieRepositoryFromFileTest.swift
+//  MovieFromFileRepositoryTest.swift
 //  MoviesScheduleInfrastructure
 //
 //  Created by Marcio Rosa on 04/12/24.
@@ -9,7 +9,7 @@ import Testing
 @testable import MoviesScheduleInfrastructure
 import MoviesScheduleDomain
 
-struct MovieRepositoryFromFileTest {
+struct MovieFromFileRepositoryTest {
     
     static let mockedData = [
         Movie(id: 1, title: "The Jigsaw Man", duration: 94),
@@ -23,10 +23,10 @@ struct MovieRepositoryFromFileTest {
         }
     }
     
-    let repository: MovieRepositoryFromFile
+    let repository: MovieFromFileRepository
     
     init() {
-        repository = MovieRepositoryFromFile(jsonResourceFileLoader: JsonResourceFileLoaderMock())
+        repository = MovieFromFileRepository(jsonResourceFileLoader: JsonResourceFileLoaderMock())
     }
 
     @Test func shouldGetAllMoviesFromJsonFile() async throws {
@@ -34,7 +34,7 @@ struct MovieRepositoryFromFileTest {
         let result = try! await repository.getAll()
         
         // then:
-        #expect(result == MovieRepositoryFromFileTest.mockedData)
+        #expect(result == MovieFromFileRepositoryTest.mockedData)
     }
 
 }
