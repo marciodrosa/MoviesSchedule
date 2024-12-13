@@ -14,13 +14,7 @@ public struct UserScheduleItemData: Equatable, Sendable {
     public let schedule: String
     
     public var endsAt: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.setLocalizedDateFormatFromTemplate("HH:mm")
-        guard let scheduleDate = dateFormatter.date(from: schedule) else {
-            return schedule
-        }
-        let endDate = scheduleDate.addingTimeInterval(Double(movie.duration) * 60)
-        return dateFormatter.string(from: endDate)
+        movie.endsAt(whenStartingAt: schedule)
     }
     
     init(movie: Movie, theater: Theater, schedule: String) {

@@ -44,17 +44,17 @@ public enum ItineraryItem: Equatable, Sendable {
     
     var duration: Int {
         switch self {
-        case .movie(movie: let movie, theater: let theater, schedule: let schedule):
+        case .movie(movie: let movie, _, _):
             movie.duration
-        case .movieWithConflicts(movie: let movie, theater: let theater, schedule: let schedule, conflicts: let conflicts):
+        case .movieWithConflicts(movie: let movie, _, _, _):
             movie.duration
         case .interval(duration: let duration):
             duration
         case .noInterval:
             0
-        case .goToOtherTheater(availableTime: let availableTime, theater: let theater):
+        case .goToOtherTheater(availableTime: let availableTime, _):
             availableTime
-        case .goToOtherTheaterWithoutTime(theater: let theater):
+        case .goToOtherTheaterWithoutTime(_):
             0
         }
     }

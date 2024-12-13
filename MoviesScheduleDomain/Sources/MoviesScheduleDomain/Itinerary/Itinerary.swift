@@ -7,7 +7,7 @@
 
 /** Representation of a user schedule formatted as a series of sorted itinerary items with start and end dates.  */
 public struct Itinerary: Equatable, Sendable {
-    let items: [ItineraryItem]
+    public let items: [ItineraryItem]
     
     public init(items: [ItineraryItem]) {
         self.items = items
