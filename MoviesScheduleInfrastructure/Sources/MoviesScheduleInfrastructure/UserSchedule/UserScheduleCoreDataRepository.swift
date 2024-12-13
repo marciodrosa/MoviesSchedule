@@ -8,12 +8,15 @@
 import MoviesScheduleDomain
 
 actor UserScheduleCoreDataRepository: UserScheduleRepository {
-    func get() async throws(MoviesScheduleDomain.RetrieveError) -> MoviesScheduleDomain.UserSchedule? {
-        return nil
+    
+    static var userSchedule: UserSchedule? = nil
+    
+    func get() async throws(RetrieveError) -> UserSchedule? {
+        return UserScheduleCoreDataRepository.userSchedule
     }
     
-    func save(_ userSchedule: MoviesScheduleDomain.UserSchedule) async throws(MoviesScheduleDomain.CreateError) {
-        
+    func save(_ userSchedule: UserSchedule) async throws(CreateError) {
+        UserScheduleCoreDataRepository.userSchedule = userSchedule
     }
     
 }

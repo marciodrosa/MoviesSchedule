@@ -62,5 +62,11 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     public func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool) {
         _ = userSchedule.setItemSelected(movie: movie, theater: theater, schedule: schedule, selected: selected)
+        Task {
+            do {
+                try await userScheduleRepository.save(userSchedule)
+            } catch {
+            }
+        }
     }
 }
