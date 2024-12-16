@@ -8,7 +8,7 @@
 import CoreData
 import MoviesScheduleDomain
 
-actor UserScheduleCoreDataRepository: UserScheduleRepository {
+struct UserScheduleCoreDataRepository: UserScheduleRepository {
     
     private let coreDataManager: CoreDataManager
     
@@ -21,7 +21,7 @@ actor UserScheduleCoreDataRepository: UserScheduleRepository {
     func get() async throws(RetrieveError) -> UserSchedule? {
         do {
             let converter: (UserScheduleItemDTO) -> UserScheduleItem = { $0.toUserScheduleItem() }
-            let items: [UserScheduleItem] = try await coreDataManager.fetchAll(
+            let items: [UserScheduleItem] = try coreDataManager.fetchAll(
                 entity: UserScheduleCoreDataRepository.entityName,
                 converter: converter
             )
@@ -38,7 +38,7 @@ actor UserScheduleCoreDataRepository: UserScheduleRepository {
         do {
             try await deleteAll()
             let converter: (UserScheduleItemDTO, UserScheduleItem) -> Void = { $0.fromUserScheduleItem($1) }
-            try await coreDataManager.create(entity: UserScheduleCoreDataRepository.entityName, objects: userSchedule.items, converter: converter)
+            try coreDataManager.create(entity: UserScheduleCoreDataRepository.entityName, objects: userSchedule.items, converter: converter)
         } catch {
             throw CreateError.unknow
         }
@@ -46,8 +46,8 @@ actor UserScheduleCoreDataRepository: UserScheduleRepository {
     
     func deleteAll() async throws(DeleteError) {
         do {
-            try await coreDataManager.deleteAll(entity: UserScheduleCoreDataRepository.entityName)
-            try await coreDataManager.save()
+            try coreDataManager.deleteAll(entity: UserScheduleCoreDataRepository.entityName)
+            try coreDataManager.save()
         } catch {
             throw DeleteError.unknow
         }

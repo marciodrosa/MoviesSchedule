@@ -9,6 +9,7 @@ import Testing
 @testable import MoviesScheduleInfrastructure
 import MoviesScheduleDomain
 
+@MainActor
 struct TheaterFromFileRepositoryTest {
     
     static let mockedTheaterData = [
@@ -25,7 +26,7 @@ struct TheaterFromFileRepositoryTest {
         MovieSchedules(movieId: 30, theaterId: 3, schedules: ["16:30"]),
     ]
     
-    actor JsonResourceFileLoaderMock: JsonResourceFileLoader {
+    class JsonResourceFileLoaderMock: JsonResourceFileLoader {
         
         func load<T>() async throws(RetrieveError) -> [T] where T : Decodable, T : Sendable {
             if T.self == Theater.self {

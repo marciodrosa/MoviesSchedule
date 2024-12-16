@@ -9,6 +9,7 @@ import Testing
 @testable import MoviesScheduleInfrastructure
 import MoviesScheduleDomain
 
+@MainActor
 struct MovieFromFileRepositoryTest {
     
     static let mockedData = [
@@ -16,7 +17,7 @@ struct MovieFromFileRepositoryTest {
         Movie(id: 2, title: "The Bikeriders", duration: 116),
     ]
     
-    actor JsonResourceFileLoaderMock: JsonResourceFileLoader {
+    struct JsonResourceFileLoaderMock: JsonResourceFileLoader {
         
         func load<T>() async throws(RetrieveError) -> [T] where T : Decodable, T : Sendable {
             return mockedData as! [T]

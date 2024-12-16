@@ -9,6 +9,7 @@ import Testing
 @testable import MoviesScheduleInfrastructure
 import MoviesScheduleDomain
 
+@MainActor
 struct UserScheduleCoreDataRepositoryTest {
     
     let repository: UserScheduleCoreDataRepository

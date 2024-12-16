@@ -8,7 +8,7 @@
 import Foundation
 import MoviesScheduleDomain
 
-actor TheaterFromFileRepository: TheaterRepository {
+struct TheaterFromFileRepository: TheaterRepository {
     
     let jsonResourceFileLoader: JsonResourceFileLoader
     

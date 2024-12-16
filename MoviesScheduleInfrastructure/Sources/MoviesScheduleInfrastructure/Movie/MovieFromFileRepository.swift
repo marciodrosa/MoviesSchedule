@@ -8,7 +8,7 @@
 import Foundation
 import MoviesScheduleDomain
 
-actor MovieFromFileRepository: MovieRepository {
+struct MovieFromFileRepository: MovieRepository {
     
     let jsonResourceFileLoader: JsonResourceFileLoader
     

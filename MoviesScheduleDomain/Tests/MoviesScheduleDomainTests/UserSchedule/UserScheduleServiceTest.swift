@@ -8,15 +8,12 @@
 import Testing
 @testable import MoviesScheduleDomain
 
+@MainActor
 struct UserScheduleServiceTest {
     
-    actor MovieRepositoryMock: MovieRepository {
+    class MovieRepositoryMock: MovieRepository {
         
-        private var movies: [Movie] = []
-        
-        func setMovies(_ movies: [Movie]) {
-            self.movies = movies
-        }
+        var movies: [Movie] = []
         
         func getAll() async throws(RetrieveError) -> [Movie] {
             return movies
@@ -27,13 +24,9 @@ struct UserScheduleServiceTest {
         }
     }
     
-    actor TheaterRepositoryMock: TheaterRepository {
+    class TheaterRepositoryMock: TheaterRepository {
 
-        private var theaters: [Theater] = []
-        
-        func setTheaters(_ theaters: [Theater]) {
-            self.theaters = theaters
-        }
+        var theaters: [Theater] = []
         
         func get(byMovieIds movieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
             return []
@@ -56,15 +49,15 @@ struct UserScheduleServiceTest {
     
     @Test func shouldReturnItemsData() async throws {
         // given:
-        await movieRepository.setMovies([
+        movieRepository.movies = [
             Movie(id: 1, title: "Star Wars", duration: 120),
             Movie(id: 2, title: "Mad Max", duration: 90),
             Movie(id: 3, title: "The Godfather", duration: 180),
-        ])
-        await theaterRepository.setTheaters([
+        ]
+        theaterRepository.theaters = [
             Theater(id: 10, name: "AMC"),
             Theater(id: 20, name: "Cinemark"),
-        ])
+        ]
         let userSchedule = UserSchedule(items: [
             UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
             UserScheduleItem(movieId: 2, theaterId: 10, schedule: "17:00"),

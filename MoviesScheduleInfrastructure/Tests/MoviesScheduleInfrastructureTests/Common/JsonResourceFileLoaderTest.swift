@@ -25,6 +25,7 @@ fileprivate struct JsonTestEntityWithDataErrors: Decodable, Equatable {
     let name: String
 }
 
+@MainActor
 struct JsonResourceFileLoaderTest {
     
     let jsonResourceFileLoader: JsonResourceFileLoaderImpl

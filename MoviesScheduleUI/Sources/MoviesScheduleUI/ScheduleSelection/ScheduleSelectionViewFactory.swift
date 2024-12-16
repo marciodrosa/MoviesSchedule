@@ -18,6 +18,6 @@ protocol ScheduleSelectionViewFactory {
 struct ScheduleSelectionViewFactoryImpl: ScheduleSelectionViewFactory {
     
     public func createView() -> any View {
-        ScheduleSelectionView(viewModel: ScheduleSelectionViewModelImpl(router: DependenciesManager.getter!.mainActorGet(), movieRepository: DependenciesManager.getter!(), userScheduleRepository: DependenciesManager.getter!(), theaterRepository: DependenciesManager.getter!()))
+        ScheduleSelectionView(viewModel: ScheduleSelectionViewModelImpl(router: DependenciesManager.getter!(), movieRepository: DependenciesManager.getter!(), userScheduleRepository: DependenciesManager.getter!(), theaterRepository: DependenciesManager.getter!()))
     }
 }

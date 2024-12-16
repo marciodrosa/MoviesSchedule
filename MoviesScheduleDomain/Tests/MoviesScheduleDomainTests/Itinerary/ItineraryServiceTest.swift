@@ -8,9 +8,10 @@
 import Testing
 @testable import MoviesScheduleDomain
 
+@MainActor
 struct ItineraryServiceTest {
     
-    actor UserScheduleRepositoryMock: UserScheduleRepository {
+    class UserScheduleRepositoryMock: UserScheduleRepository {
         
         private var userSchedule: UserSchedule = UserSchedule(items: [])
         
@@ -23,13 +24,9 @@ struct ItineraryServiceTest {
         }
     }
     
-    actor UserScheduleServiceMock: UserScheduleService {
+    class UserScheduleServiceMock: UserScheduleService {
         
-        private var userScheduleItemsData: [UserScheduleItemData] = []
-        
-        func set(userScheduleItemsData: [UserScheduleItemData]) {
-            self.userScheduleItemsData = userScheduleItemsData
-        }
+        var userScheduleItemsData: [UserScheduleItemData] = []
         
         func getItemsData(_ userSchedule: UserSchedule) async -> [UserScheduleItemData] {
             return userScheduleItemsData
@@ -48,7 +45,7 @@ struct ItineraryServiceTest {
     
     @Test func shouldCreateItineraryFromUserSchedule() async throws {
         // given:
-        await userScheduleService.set(userScheduleItemsData: [
+        userScheduleService.userScheduleItemsData = [
             UserScheduleItemData(
                 movie: Movie(id: 1, title: "Star Wars", duration: 120),
                 theater: Theater(id: 10, name: "AMC"),
@@ -59,7 +56,7 @@ struct ItineraryServiceTest {
                 theater: Theater(id: 10, name: "AMC"),
                 schedule: "21:00"
             ),
-        ])
+        ]
         
         // when:
         let itinerary = await itineraryService.createItinerary()
@@ -82,7 +79,7 @@ struct ItineraryServiceTest {
     
     @Test func shouldCreateItineraryWithConflicts() async throws {
         // given:
-        await userScheduleService.set(userScheduleItemsData: [
+        userScheduleService.userScheduleItemsData = [
             UserScheduleItemData(
                 movie: Movie(id: 1, title: "Star Wars", duration: 120),
                 theater: Theater(id: 10, name: "AMC"),
@@ -108,7 +105,7 @@ struct ItineraryServiceTest {
                 theater: Theater(id: 20, name: "Cinemark"),
                 schedule: "20:00"
             ),
-        ])
+        ]
         
         // when:
         let itinerary = await itineraryService.createItinerary()

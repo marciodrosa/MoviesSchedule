@@ -47,6 +47,7 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
             return
         }
         loading = true
+        userSchedule = (try? await userScheduleRepository.get()) ?? UserSchedule(items: [])
         movies = (try? await movieRepository.getAll())?.sorted { $0.title < $1.title } ?? []
         theaters = (try? await theaterRepository.get(byMovieIds: movies.map { $0.id })) ?? []
         loading = false

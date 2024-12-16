@@ -12,13 +12,9 @@ import MoviesScheduleDomain
 @MainActor
 class ItineraryViewModelTest {
     
-    actor ItineraryServiceMock: ItineraryService {
+    class ItineraryServiceMock: ItineraryService {
         
-        private var itinerary: Itinerary = Itinerary(items: [])
-        
-        func setItinerary(_ itinerary: Itinerary) {
-            self.itinerary = itinerary
-        }
+        var itinerary: Itinerary = Itinerary(items: [])
         
         func createItinerary() async -> Itinerary {
             return itinerary
@@ -39,7 +35,7 @@ class ItineraryViewModelTest {
             .interval(duration: 60),
             .movie(movie: Movie(id: 2, title: "Mad Max", duration: 120), theater: Theater(id: 10, name: "AMC"), schedule: "19:00")
         ])
-        await itineraryService.setItinerary(itinerary)
+        itineraryService.itinerary = itinerary
         
         // when:
         await viewModel.load()

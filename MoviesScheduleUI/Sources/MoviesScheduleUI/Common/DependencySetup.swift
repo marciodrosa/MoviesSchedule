@@ -10,9 +10,9 @@ import MoviesScheduleApplication
 
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
-        .mainActorFactory(ScheduleSelectionRouter.self) { getter in ScheduleSelectionRouterImpl() },
-        .mainActorFactory(HomeViewFactory.self) { getter in HomeViewFactoryImpl(scheduleSelectionViewFactory: getter.mainActorGet(), itineraryViewFactory: getter.mainActorGet()) },
-        .mainActorFactory(ItineraryViewFactory.self) { getter in ItineraryViewFactoryImpl() },
-        .mainActorFactory(ScheduleSelectionViewFactory.self) { getter in ScheduleSelectionViewFactoryImpl() },
+        .factory(ScheduleSelectionRouter.self) { getter in ScheduleSelectionRouterImpl() },
+        .factory(HomeViewFactory.self) { getter in HomeViewFactoryImpl(scheduleSelectionViewFactory: getter(), itineraryViewFactory: getter()) },
+        .factory(ItineraryViewFactory.self) { getter in ItineraryViewFactoryImpl() },
+        .factory(ScheduleSelectionViewFactory.self) { getter in ScheduleSelectionViewFactoryImpl() },
     ]
 }

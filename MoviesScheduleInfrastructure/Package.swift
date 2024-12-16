@@ -26,14 +26,16 @@ let package = Package(
                 "DependenciesManager"
             ],
             resources: [
-                Resource.copy("JsonFiles")
+                .copy("JsonFiles"),
+                .process("Database"),
             ]
         ),
         .testTarget(
             name: "MoviesScheduleInfrastructureTests",
             dependencies: ["MoviesScheduleInfrastructure"],
             resources: [
-                Resource.copy("JsonFiles")
+                .copy("JsonFiles"),
+                //.copy("CoreData/Model.xcdatamodel"),
             ]
         ),
     ]

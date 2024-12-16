@@ -12,9 +12,11 @@ public enum RetrieveError: Error {
 }
 
 public enum CreateError: Error {
+    case unreachable
     case unknow
 }
 
 public enum DeleteError: Error {
+    case unreachable
     case unknow
 }

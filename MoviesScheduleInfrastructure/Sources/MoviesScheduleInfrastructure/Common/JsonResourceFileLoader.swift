@@ -9,13 +9,14 @@ import Foundation
 import MoviesScheduleDomain
 
 /** Provides access to the entity data declared in the resource JSON file.  */
-protocol JsonResourceFileLoader: Sendable {
+@MainActor
+protocol JsonResourceFileLoader {
     
     /** Loads the objects from the JSON file of the entity, which should be located in the JsonFiles/ folder and named EntityName.json.  */
     func load<T>() async throws(RetrieveError) -> [T] where T: Decodable, T: Sendable
 }
 
-actor JsonResourceFileLoaderImpl: JsonResourceFileLoader {
+struct JsonResourceFileLoaderImpl: JsonResourceFileLoader {
     
     let bundle: Bundle
     

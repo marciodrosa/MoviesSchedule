@@ -5,10 +5,13 @@
 //  Created by Marcio Rosa on 13/12/24.
 //
 
+import Foundation
 import CoreData
+import MoviesScheduleDomain
 
 /** Object that handles storage using Core Data. */
-protocol CoreDataManager: Actor {
+@MainActor
+protocol CoreDataManager {
     /** Saves (commits) all pending transactions. */
     func save() throws
     
@@ -22,10 +25,21 @@ protocol CoreDataManager: Actor {
     func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: (TDTO) -> T) throws -> [T]
 }
 
-actor CoreDataManagerImpl: CoreDataManager {
+
+open class PersistentContainer: NSPersistentContainer, @unchecked Sendable {
+}
+
+class CoreDataManagerImpl: CoreDataManager {
     
-    private lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "DataModel")
+    private lazy var persistentContainer: NSPersistentContainer? = {
+        let bundle = Bundle.module
+        guard let modelUrl = bundle.url(forResource: "Model", withExtension: "momd") else {
+            return nil
+        }
+        guard let model = NSManagedObjectModel(contentsOf: modelUrl) else {
+            return nil
+        }
+        let container = PersistentContainer(name: "Model", managedObjectModel: model)
         container.loadPersistentStores { _, error in
             if let error {
                 fatalError("Failed to load persistent stores: \(error.localizedDescription)")
@@ -35,13 +49,19 @@ actor CoreDataManagerImpl: CoreDataManager {
     }()
     
     func save() throws {
+        guard let persistentContainer else {
+            return
+        }
         guard persistentContainer.viewContext.hasChanges else {
             return
         }
         try persistentContainer.viewContext.save()
     }
     
-    func create<T: Sendable, DTO>(entity: String, objects: [T], converter: (DTO, T) -> Void) {
+    func create<T: Sendable, DTO>(entity: String, objects: [T], converter: (DTO, T) -> Void) throws(CreateError) {
+        guard let persistentContainer else {
+            throw .unreachable
+        }
         for object in objects {
             if let dto = NSEntityDescription.insertNewObject(forEntityName: entity, into: persistentContainer.viewContext) as? DTO {
                 converter(dto, object)
@@ -49,17 +69,29 @@ actor CoreDataManagerImpl: CoreDataManager {
         }
     }
     
-    func deleteAll(entity: String) throws {
+    func deleteAll(entity: String) throws(DeleteError) {
+        guard let persistentContainer else {
+            throw .unreachable
+        }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
             try persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: persistentContainer.viewContext)
+        } catch {
+            throw .unknow
         }
     }
     
-    func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: (TDTO) -> T) throws -> [T] {
+    func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: (TDTO) -> T) throws(RetrieveError) -> [T] {
+        guard let persistentContainer else {
+            throw .unreachable
+        }
         let fetchRequest = NSFetchRequest<TDTO>(entityName: entity)
-        return try persistentContainer.viewContext.fetch(fetchRequest).map(converter)
+        do {
+            return try persistentContainer.viewContext.fetch(fetchRequest).map(converter)
+        } catch {
+            throw .unknow
+        }
     }
 }
 

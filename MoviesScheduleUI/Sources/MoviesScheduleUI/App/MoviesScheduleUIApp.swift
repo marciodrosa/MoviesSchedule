@@ -21,7 +21,7 @@ public struct MoviesScheduleUIApp: App {
     }
     
     public var homeView: AnyView {
-        let factory: HomeViewFactory = DependenciesManager.getter!.mainActorGet()
+        let factory: HomeViewFactory = DependenciesManager.getter!.get()
         return AnyView(factory.createView())
     }
 }

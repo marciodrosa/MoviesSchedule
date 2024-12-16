@@ -7,7 +7,8 @@
 
 import Foundation
 
-public protocol ItineraryService: Sendable {
+@MainActor
+public protocol ItineraryService {
     func createItinerary() async -> Itinerary
 }
 

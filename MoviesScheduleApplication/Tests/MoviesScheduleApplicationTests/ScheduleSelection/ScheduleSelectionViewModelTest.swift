@@ -21,13 +21,9 @@ class ScheduleSelectionViewModelTest {
         }
     }
     
-    actor MovieRepositoryMock: MovieRepository {
+    class MovieRepositoryMock: MovieRepository {
         
-        private var movies: [Movie] = []
-        
-        func setMovies(_ movies: [Movie]) {
-            self.movies = movies
-        }
+        var movies: [Movie] = []
         
         func getAll() async throws(RetrieveError) -> [Movie] {
             return movies
@@ -38,13 +34,9 @@ class ScheduleSelectionViewModelTest {
         }
     }
     
-    actor TheaterRepositoryMock: TheaterRepository {
+    class TheaterRepositoryMock: TheaterRepository {
 
-        private var theaters: [Theater] = []
-        
-        func setTheaters(_ theaters: [Theater]) {
-            self.theaters = theaters
-        }
+        var theaters: [Theater] = []
         
         func get(byMovieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
             return theaters
@@ -55,7 +47,7 @@ class ScheduleSelectionViewModelTest {
         }
     }
     
-    actor UserScheduleRepositoryMock: UserScheduleRepository {
+    class UserScheduleRepositoryMock: UserScheduleRepository {
         
         func get() async throws(RetrieveError) -> UserSchedule? {
             return nil
@@ -78,13 +70,13 @@ class ScheduleSelectionViewModelTest {
 
     @Test func shouldLoad() async throws {
         // given:
-        await movieRepository.setMovies([
+        movieRepository.movies = [
             Movie(id: 1, title: "Star Wars", duration: 120),
             Movie(id: 2, title: "Mad Max", duration: 120),
             Movie(id: 3, title: "The Godfather", duration: 180),
-        ])
+        ]
         
-        await theaterRepository.setTheaters([
+        theaterRepository.theaters = [
             Theater(id: 1, name: "Cinemark", movieSchedules: [
                 MovieSchedules(movieId: 1, theaterId: 1, schedules: ["18:30", "20:30"]),
                 MovieSchedules(movieId: 2, theaterId: 1, schedules: ["15:30", "21:30"]),
@@ -93,7 +85,7 @@ class ScheduleSelectionViewModelTest {
                 MovieSchedules(movieId: 1, theaterId: 2, schedules: ["17:00"]),
                 MovieSchedules(movieId: 3, theaterId: 2, schedules: ["20:00"]),
             ])
-        ])
+        ]
 
         // when:
         await viewModel.load()
@@ -112,13 +104,13 @@ class ScheduleSelectionViewModelTest {
     
     @Test func shouldReturnTheatersByMovieSortedByName() async {
         // given:
-        await movieRepository.setMovies([
+        movieRepository.movies = [
             Movie(id: 1, title: "Star Wars", duration: 120),
             Movie(id: 2, title: "Mad Max", duration: 120),
             Movie(id: 3, title: "The Godfather", duration: 180),
-        ])
+        ]
         
-        await theaterRepository.setTheaters([
+        theaterRepository.theaters = [
             Theater(id: 1, name: "Cinemark", movieSchedules: [
                 MovieSchedules(movieId: 1, theaterId: 1, schedules: ["18:30", "20:30"]),
                 MovieSchedules(movieId: 2, theaterId: 1, schedules: ["15:30", "21:30"]),
@@ -127,7 +119,7 @@ class ScheduleSelectionViewModelTest {
                 MovieSchedules(movieId: 1, theaterId: 2, schedules: ["17:00"]),
                 MovieSchedules(movieId: 3, theaterId: 2, schedules: ["20:00"]),
             ])
-        ])
+        ]
         await viewModel.load()
 
         // when:
