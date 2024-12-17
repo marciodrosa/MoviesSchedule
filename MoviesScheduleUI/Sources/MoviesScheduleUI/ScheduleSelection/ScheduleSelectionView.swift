@@ -38,11 +38,22 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
             }
             .toolbar {
                 ToolbarItem {
-                    Button("Reload") {
+                    Button(action: {
                         Task {
                             await viewModel.load()
                         }
-                    }
+                    }, label: {
+                        Image(systemName: "arrow.clockwise")
+                    })
+                }
+                ToolbarItem {
+                    Button(action: {
+                        Task {
+                            await viewModel.clear()
+                        }
+                    }, label: {
+                        Image(systemName: "trash")
+                    })
                 }
             }
         }.onAppear {
@@ -138,6 +149,10 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
             loading = true
             try? await Task.sleep(nanoseconds: 2_000_000_000)
             loading = false
+        }
+        
+        func clear() async {
+            userSchedule = UserSchedule(items: [])
         }
         
         func viewSummary() {

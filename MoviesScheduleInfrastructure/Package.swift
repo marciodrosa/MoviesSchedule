@@ -27,7 +27,7 @@ let package = Package(
             ],
             resources: [
                 .copy("JsonFiles"),
-                .process("Database"),
+                .process("DataModel"),
             ]
         ),
         .testTarget(
@@ -35,7 +35,6 @@ let package = Package(
             dependencies: ["MoviesScheduleInfrastructure"],
             resources: [
                 .copy("JsonFiles"),
-                //.copy("CoreData/Model.xcdatamodel"),
             ]
         ),
     ]

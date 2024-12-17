@@ -15,6 +15,7 @@ public protocol ScheduleSelectionViewModel: ObservableObject {
     var userSchedule: UserSchedule { get }
     func theaters(byMovie: Movie) -> [Theater]
     func load() async
+    func clear() async
     func viewSummary()
     func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool
     func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool)
@@ -51,6 +52,11 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
         movies = (try? await movieRepository.getAll())?.sorted { $0.title < $1.title } ?? []
         theaters = (try? await theaterRepository.get(byMovieIds: movies.map { $0.id })) ?? []
         loading = false
+    }
+    
+    public func clear() async {
+        userSchedule = UserSchedule(items: [])
+        try? await userScheduleRepository.save(userSchedule)
     }
     
     public func viewSummary() {

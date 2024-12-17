@@ -8,11 +8,19 @@
 import CoreData
 import MoviesScheduleDomain
 
+fileprivate func toUserScheduleItemConverter(dto: UserScheduleItemDTO) -> UserScheduleItem {
+    dto.toUserScheduleItem()
+}
+
+fileprivate func fromUserScheduleItemConverter(dto: UserScheduleItemDTO, item: UserScheduleItem) {
+    dto.fromUserScheduleItem(item)
+}
+
 struct UserScheduleCoreDataRepository: UserScheduleRepository {
     
     private let coreDataManager: CoreDataManager
     
-    private static let entityName = "UserScheduleItem"
+    private static let itemEntityName = "UserScheduleItem"
     
     init(coreDataManager: CoreDataManager) {
         self.coreDataManager = coreDataManager
@@ -20,10 +28,9 @@ struct UserScheduleCoreDataRepository: UserScheduleRepository {
     
     func get() async throws(RetrieveError) -> UserSchedule? {
         do {
-            let converter: (UserScheduleItemDTO) -> UserScheduleItem = { $0.toUserScheduleItem() }
-            let items: [UserScheduleItem] = try coreDataManager.fetchAll(
-                entity: UserScheduleCoreDataRepository.entityName,
-                converter: converter
+            let items: [UserScheduleItem] = try await coreDataManager.fetchAll(
+                entity: UserScheduleCoreDataRepository.itemEntityName,
+                converter: toUserScheduleItemConverter
             )
             guard items.count > 0 else {
                 return nil
@@ -36,9 +43,9 @@ struct UserScheduleCoreDataRepository: UserScheduleRepository {
     
     func save(_ userSchedule: UserSchedule) async throws(CreateError) {
         do {
-            try await deleteAll()
-            let converter: (UserScheduleItemDTO, UserScheduleItem) -> Void = { $0.fromUserScheduleItem($1) }
-            try coreDataManager.create(entity: UserScheduleCoreDataRepository.entityName, objects: userSchedule.items, converter: converter)
+            try await coreDataManager.deleteAll(entity: UserScheduleCoreDataRepository.itemEntityName)
+            try await coreDataManager.create(entity: UserScheduleCoreDataRepository.itemEntityName, objects: userSchedule.items, converter: fromUserScheduleItemConverter)
+            try await coreDataManager.save()
         } catch {
             throw CreateError.unknow
         }
@@ -46,8 +53,8 @@ struct UserScheduleCoreDataRepository: UserScheduleRepository {
     
     func deleteAll() async throws(DeleteError) {
         do {
-            try coreDataManager.deleteAll(entity: UserScheduleCoreDataRepository.entityName)
-            try coreDataManager.save()
+            try await coreDataManager.deleteAll(entity: UserScheduleCoreDataRepository.itemEntityName)
+            try await coreDataManager.save()
         } catch {
             throw DeleteError.unknow
         }

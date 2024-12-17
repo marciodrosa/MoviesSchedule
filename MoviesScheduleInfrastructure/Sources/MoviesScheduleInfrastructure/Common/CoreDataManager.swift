@@ -13,24 +13,26 @@ import MoviesScheduleDomain
 @MainActor
 protocol CoreDataManager {
     /** Saves (commits) all pending transactions. */
-    func save() throws
+    func save() async throws
     
     /** Inserts the given sendable into the database, converting it to the appropriate managed DTO object. */
-    func create<T: Sendable, DTO>(entity: String, objects: [T], converter: (DTO, T) -> Void) throws
+    func create<T: Sendable, DTO>(entity: String, objects: [T], converter: @Sendable @escaping (DTO, T) -> Void) async throws
     
     /** Deletes all records of the given entity. */
-    func deleteAll(entity: String) throws
+    func deleteAll(entity: String) async throws
     
     /** Returns all records of the given entity. This requires a converter function due a limitation of Core Data that doesn't allow entities to conform to Sendable. */
-    func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: (TDTO) -> T) throws -> [T]
+    func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: @Sendable @escaping (TDTO) -> T) async throws -> [T]
 }
 
-
-open class PersistentContainer: NSPersistentContainer, @unchecked Sendable {
+@globalActor
+fileprivate actor CoreDataActor: GlobalActor {
+    static var shared = CoreDataActor()
 }
 
 class CoreDataManagerImpl: CoreDataManager {
     
+    @CoreDataActor
     private lazy var persistentContainer: NSPersistentContainer? = {
         let bundle = Bundle.module
         guard let modelUrl = bundle.url(forResource: "Model", withExtension: "momd") else {
@@ -39,7 +41,7 @@ class CoreDataManagerImpl: CoreDataManager {
         guard let model = NSManagedObjectModel(contentsOf: modelUrl) else {
             return nil
         }
-        let container = PersistentContainer(name: "Model", managedObjectModel: model)
+        let container = NSPersistentContainer(name: "Model", managedObjectModel: model)
         container.loadPersistentStores { _, error in
             if let error {
                 fatalError("Failed to load persistent stores: \(error.localizedDescription)")
@@ -48,50 +50,110 @@ class CoreDataManagerImpl: CoreDataManager {
         return container
     }()
     
-    func save() throws {
-        guard let persistentContainer else {
-            return
-        }
-        guard persistentContainer.viewContext.hasChanges else {
-            return
-        }
-        try persistentContainer.viewContext.save()
-    }
-    
-    func create<T: Sendable, DTO>(entity: String, objects: [T], converter: (DTO, T) -> Void) throws(CreateError) {
-        guard let persistentContainer else {
-            throw .unreachable
-        }
-        for object in objects {
-            if let dto = NSEntityDescription.insertNewObject(forEntityName: entity, into: persistentContainer.viewContext) as? DTO {
-                converter(dto, object)
+    func save() async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            runInBackgroundTask { persistentContainer in
+                do {
+                    guard let persistentContainer else {
+                        continuation.resume(throwing: RetrieveError.unreachable)
+                        return
+                    }
+                    guard persistentContainer.viewContext.hasChanges else {
+                        continuation.resume()
+                        return
+                    }
+                    try persistentContainer.viewContext.save()
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: CreateError.unknow)
+                }
             }
         }
     }
     
-    func deleteAll(entity: String) throws(DeleteError) {
-        guard let persistentContainer else {
-            throw .unreachable
-        }
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+    func create<T: Sendable, DTO>(entity: String, objects: [T], converter: @Sendable @escaping (DTO, T) -> Void) async throws(CreateError) {
         do {
-            try persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: persistentContainer.viewContext)
+            return try await withCheckedThrowingContinuation { continuation in
+                runInBackgroundTask { persistentContainer in
+                    do {
+                        guard let persistentContainer else {
+                            continuation.resume(throwing: RetrieveError.unreachable)
+                            return
+                        }
+                        for object in objects {
+                            guard let dto = NSEntityDescription.insertNewObject(forEntityName: entity, into: persistentContainer.viewContext) as? DTO else {
+                                throw CreateError.invalidData
+                            }
+                            converter(dto, object)
+                        }
+                        continuation.resume()
+                    } catch {
+                        continuation.resume(throwing: CreateError.unknow)
+                    }
+                }
+            }
+        } catch let error as CreateError {
+            throw error
         } catch {
             throw .unknow
         }
     }
     
-    func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: (TDTO) -> T) throws(RetrieveError) -> [T] {
-        guard let persistentContainer else {
-            throw .unreachable
-        }
-        let fetchRequest = NSFetchRequest<TDTO>(entityName: entity)
+    func deleteAll(entity: String) async throws(DeleteError) {
         do {
-            return try persistentContainer.viewContext.fetch(fetchRequest).map(converter)
+            return try await withCheckedThrowingContinuation { continuation in
+                runInBackgroundTask { persistentContainer in
+                    do {
+                        guard let persistentContainer else {
+                            continuation.resume(throwing: RetrieveError.unreachable)
+                            return
+                        }
+                        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+                        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                        try persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: persistentContainer.viewContext)
+                        continuation.resume()
+                    } catch {
+                        continuation.resume(throwing: RetrieveError.unknow)
+                    }
+                }
+            }
+        } catch let error as DeleteError {
+            throw error
         } catch {
             throw .unknow
         }
     }
+    
+    func fetchAll<TDTO: NSFetchRequestResult, T: Sendable>(entity: String, converter: @Sendable @escaping (TDTO) -> T) async throws(RetrieveError) -> [T] {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                runInBackgroundTask { persistentContainer in
+                    do {
+                        guard let persistentContainer else {
+                            continuation.resume(throwing: RetrieveError.unreachable)
+                            return
+                        }
+                        let fetchRequest = NSFetchRequest<TDTO>(entityName: entity)
+                        let result = try persistentContainer.viewContext.fetch(fetchRequest).map(converter)
+                        continuation.resume(returning: result)
+                    } catch {
+                        continuation.resume(throwing: RetrieveError.unknow)
+                    }
+                }
+            }
+        } catch let error as RetrieveError {
+            throw error
+        } catch {
+            throw .unknow
+        }
+    }
+    
+    private func runInBackgroundTask(_ block: @Sendable @escaping @CoreDataActor (NSPersistentContainer?) -> Void) {
+        DispatchQueue.global().async {
+            Task {
+                InfrastructureUtils().fakeDelay(withSeconds: 0.5)
+                await block(await self.persistentContainer)
+            }
+        }
+    }
 }
-

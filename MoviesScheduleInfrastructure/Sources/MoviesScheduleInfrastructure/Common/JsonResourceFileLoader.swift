@@ -29,13 +29,26 @@ struct JsonResourceFileLoaderImpl: JsonResourceFileLoader {
         guard let fileResourcePath else {
             throw .unreachable
         }
-        guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: fileResourcePath)) else {
-            throw .unreachable
-        }
         do {
-            return try JSONDecoder().decode([T].self, from: jsonData)
+            return try await withCheckedThrowingContinuation { continuation in
+                DispatchQueue.global().async {
+                    InfrastructureUtils().fakeDelay(withSeconds: 0.5)
+                    guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: fileResourcePath)) else {
+                        continuation.resume(throwing: RetrieveError.unreachable)
+                        return;
+                    }
+                    do {
+                        let decodedData = try JSONDecoder().decode([T].self, from: jsonData)
+                        continuation.resume(returning: decodedData)
+                    } catch {
+                        continuation.resume(throwing: RetrieveError.invalidData)
+                    }
+                }
+            }
+        } catch let error as RetrieveError {
+            throw error
         } catch {
-            throw .invalidData
+            throw .unknow
         }
     }
 }

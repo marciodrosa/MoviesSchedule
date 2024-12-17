@@ -1,6 +1,7 @@
 import Testing
 @testable import DependenciesManager
 
+@MainActor
 struct DependencyGetterTest {
     
     protocol SomeProtocol {

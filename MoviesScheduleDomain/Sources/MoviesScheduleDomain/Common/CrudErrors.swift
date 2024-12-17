@@ -13,6 +13,7 @@ public enum RetrieveError: Error {
 
 public enum CreateError: Error {
     case unreachable
+    case invalidData
     case unknow
 }
 
