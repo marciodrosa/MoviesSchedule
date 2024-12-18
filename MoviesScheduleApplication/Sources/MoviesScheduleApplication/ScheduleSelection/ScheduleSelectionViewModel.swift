@@ -8,6 +8,7 @@
 import Foundation
 import MoviesScheduleDomain
 
+/** View model for the screen where the user picks the schedules. */
 @MainActor
 public protocol ScheduleSelectionViewModel: ObservableObject {
     var loading: Bool { get }
@@ -16,14 +17,12 @@ public protocol ScheduleSelectionViewModel: ObservableObject {
     func theaters(byMovie: Movie) -> [Theater]
     func load() async
     func clear() async
-    func viewSummary()
     func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool
     func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool)
 }
 
 public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
-    private let router: ScheduleSelectionRouter
     private let movieRepository: MovieRepository
     private let userScheduleRepository: UserScheduleRepository
     private let theaterRepository: TheaterRepository
@@ -33,8 +32,7 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     @Published private var theaters: [Theater] = []
     private var saveTask: Task<Void, Never>?
     
-    public init(router: ScheduleSelectionRouter, movieRepository: MovieRepository, userScheduleRepository: UserScheduleRepository, theaterRepository: TheaterRepository) {
-        self.router = router
+    public init(movieRepository: MovieRepository, userScheduleRepository: UserScheduleRepository, theaterRepository: TheaterRepository) {
         self.movieRepository = movieRepository
         self.userScheduleRepository = userScheduleRepository
         self.theaterRepository = theaterRepository
@@ -58,10 +56,6 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     public func clear() async {
         userSchedule = UserSchedule(items: [])
         try? await userScheduleRepository.save(userSchedule)
-    }
-    
-    public func viewSummary() {
-        router.goToSummary()
     }
     
     public func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool {

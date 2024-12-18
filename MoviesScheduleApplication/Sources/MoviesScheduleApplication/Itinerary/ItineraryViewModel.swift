@@ -8,6 +8,7 @@
 import Foundation
 import MoviesScheduleDomain
 
+/** View model for the screen that presents the itinerary based on the user's selected schedules. */
 @MainActor
 public protocol ItineraryViewModel: ObservableObject {
     var loading: Bool { get }
