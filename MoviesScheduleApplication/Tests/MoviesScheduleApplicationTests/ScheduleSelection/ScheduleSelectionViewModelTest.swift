@@ -13,14 +13,6 @@ import MoviesScheduleDomain
 @MainActor
 class ScheduleSelectionViewModelTest {
     
-    class ScheduleSelectionRouterMock: ScheduleSelectionRouter {
-        
-        var wentToSummary = false
-        func goToSummary() {
-            wentToSummary = true
-        }
-    }
-    
     class MovieRepositoryMock: MovieRepository {
         
         var movies: [Movie] = []
@@ -58,14 +50,13 @@ class ScheduleSelectionViewModelTest {
         }
     }
     
-    let router = ScheduleSelectionRouterMock()
     let movieRepository = MovieRepositoryMock()
     let theaterRepository = TheaterRepositoryMock()
     let userScheduleRepository = UserScheduleRepositoryMock()
     let viewModel: ScheduleSelectionViewModelImpl
     
     init() {
-        viewModel = ScheduleSelectionViewModelImpl(router: router, movieRepository: movieRepository, userScheduleRepository: userScheduleRepository, theaterRepository: theaterRepository)
+        viewModel = ScheduleSelectionViewModelImpl(movieRepository: movieRepository, userScheduleRepository: userScheduleRepository, theaterRepository: theaterRepository)
     }
 
     @Test func shouldLoad() async throws {
