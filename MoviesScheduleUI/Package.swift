@@ -23,10 +23,6 @@ let package = Package(
             dependencies: [
                 "MoviesScheduleApplication"
             ]
-        ),
-        .testTarget(
-            name: "MoviesScheduleUITests",
-            dependencies: ["MoviesScheduleUI"]
-        ),
+        )
     ]
 )
