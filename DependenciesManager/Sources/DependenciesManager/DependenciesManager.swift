@@ -6,10 +6,11 @@
 //
 
 /** The main class responsible to manage the dependency injection. */
+@MainActor
 public class DependenciesManager {
     
     /** The object that can be used to retrieve dependencies implementations. */
-    public nonisolated(unsafe) static var getter: DependencyGetter?
+    public static var getter: DependencyGetter?
     
     /** Must be called to set all the implementations of dependencies. */
     public static func setupDependencies(_ initializeFunctions: [() -> [DependencyInstance<Any, Any>]]) {

@@ -8,13 +8,14 @@
 import Foundation
 
 /** The object that can be used to retrieve the implementation of a given protocol. */
+@MainActor
 public protocol DependencyGetter {
-    @MainActor func get<T>() -> T
-    @MainActor func callAsFunction<T>() -> T
+    func get<T>() -> T
+    func callAsFunction<T>() -> T
 }
 
 extension DependencyGetter {
-    @MainActor func callAsFunction<T>() -> T {
+    func callAsFunction<T>() -> T {
         return get()
     }
 }

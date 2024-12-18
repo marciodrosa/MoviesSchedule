@@ -12,6 +12,7 @@ import MoviesScheduleUI
 import DependenciesManager
 
 @main
+@MainActor
 struct MoviesScheduleMain {
     
     static func main() {
