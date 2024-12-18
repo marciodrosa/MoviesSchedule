@@ -28,7 +28,7 @@ struct TheaterFromFileRepositoryTest {
     
     class JsonResourceFileLoaderMock: JsonResourceFileLoader {
         
-        func load<T>() async throws(RetrieveError) -> [T] where T : Decodable, T : Sendable {
+        func load<T>() async throws(CrudError) -> [T] where T : Decodable, T : Sendable {
             if T.self == Theater.self {
                 return mockedTheaterData as! [T]
             } else if T.self == MovieSchedules.self {

@@ -47,13 +47,13 @@ struct JsonResourceFileLoaderTest {
     }
     
     @Test func shouldThrowUnreachableErrorWhenTryingToLoadDataWithoutAProperFile() async throws {
-        await #expect(throws: RetrieveError.unreachable, performing: {
+        await #expect(throws: CrudError.unreachable, performing: {
             let _: [JsonTestEntityWithoutFile] = try await jsonResourceFileLoader.load()
         })
     }
     
     @Test func shouldThrowInvalidErrorWhenTryingToLoadAnInvalidJsonData() async throws {
-        await #expect(throws: RetrieveError.invalidData, performing: {
+        await #expect(throws: CrudError.invalidData, performing: {
             let _: [JsonTestEntityWithDataErrors] = try await jsonResourceFileLoader.load()
         })
     }

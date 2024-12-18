@@ -25,11 +25,11 @@ class ScheduleSelectionViewModelTest {
         
         var movies: [Movie] = []
         
-        func getAll() async throws(RetrieveError) -> [Movie] {
+        func getAll() async throws(CrudError) -> [Movie] {
             return movies
         }
         
-        func get(byIds: [Int64]) async throws(RetrieveError) -> [Movie] {
+        func get(byIds: [Int64]) async throws(CrudError) -> [Movie] {
             return movies
         }
     }
@@ -38,22 +38,22 @@ class ScheduleSelectionViewModelTest {
 
         var theaters: [Theater] = []
         
-        func get(byMovieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
+        func get(byMovieIds: [Int64]) async throws(CrudError) -> [Theater] {
             return theaters
         }
         
-        func get(byIds: [Int64]) async throws(RetrieveError) -> [Theater] {
+        func get(byIds: [Int64]) async throws(CrudError) -> [Theater] {
             return theaters
         }
     }
     
     class UserScheduleRepositoryMock: UserScheduleRepository {
         
-        func get() async throws(RetrieveError) -> UserSchedule? {
+        func get() async throws(CrudError) -> UserSchedule? {
             return nil
         }
         
-        func save(_ userSchedule: UserSchedule) async throws(CreateError) {
+        func save(_ userSchedule: UserSchedule) async throws(CrudError) {
             
         }
     }

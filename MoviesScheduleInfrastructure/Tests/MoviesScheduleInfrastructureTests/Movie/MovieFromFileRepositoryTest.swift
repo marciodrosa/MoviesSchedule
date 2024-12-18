@@ -19,7 +19,7 @@ struct MovieFromFileRepositoryTest {
     
     struct JsonResourceFileLoaderMock: JsonResourceFileLoader {
         
-        func load<T>() async throws(RetrieveError) -> [T] where T : Decodable, T : Sendable {
+        func load<T>() async throws(CrudError) -> [T] where T : Decodable, T : Sendable {
             return mockedData as! [T]
         }
     }

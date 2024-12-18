@@ -16,7 +16,7 @@ struct TheaterFromFileRepository: TheaterRepository {
         self.jsonResourceFileLoader = jsonResourceFileLoader
     }
     
-    func get(byMovieIds movieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
+    func get(byMovieIds movieIds: [Int64]) async throws((CrudError)) -> [Theater] {
         let allTheaters: [Theater] = try await jsonResourceFileLoader.load()
         let allSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
         let movieSchedules = allSchedules.filter { movieIds.contains($0.movieId) }
@@ -24,7 +24,7 @@ struct TheaterFromFileRepository: TheaterRepository {
         return mountAggregate(allTheaters: allTheaters, allSchedules: movieSchedules, filterByIds: theaterIds)
     }
     
-    func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Theater] {
+    func get(byIds ids: [Int64]) async throws((CrudError)) -> [Theater] {
         let allTheaters: [Theater] = try await jsonResourceFileLoader.load()
         let allSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
         return mountAggregate(allTheaters: allTheaters, allSchedules: allSchedules, filterByIds: ids)

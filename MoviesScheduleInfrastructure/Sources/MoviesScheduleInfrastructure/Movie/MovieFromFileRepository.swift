@@ -16,11 +16,11 @@ struct MovieFromFileRepository: MovieRepository {
         self.jsonResourceFileLoader = jsonResourceFileLoader
     }
     
-    func getAll() async throws(RetrieveError) -> [Movie] {
+    func getAll() async throws((CrudError)) -> [Movie] {
         return try await jsonResourceFileLoader.load()
     }
     
-    func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Movie] {
+    func get(byIds ids: [Int64]) async throws((CrudError)) -> [Movie] {
         return try await jsonResourceFileLoader.load().filter { ids.contains($0.id) }
     }
 }

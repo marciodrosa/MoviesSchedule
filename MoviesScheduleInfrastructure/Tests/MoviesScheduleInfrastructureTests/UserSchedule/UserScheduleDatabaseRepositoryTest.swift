@@ -1,5 +1,5 @@
 //
-//  UserScheduleCoreDataRepositoryTest.swift
+//  UserScheduleDatabaseRepositoryTest.swift
 //  MoviesScheduleInfrastructure
 //
 //  Created by Marcio Rosa on 14/12/24.
@@ -10,13 +10,14 @@ import Testing
 import MoviesScheduleDomain
 
 @MainActor
-struct UserScheduleCoreDataRepositoryTest {
+@Suite(.serialized)
+struct UserScheduleDatabaseRepositoryTest {
     
-    let repository: UserScheduleCoreDataRepository
-    let coreDataManager = CoreDataManagerImpl()
+    let repository: UserScheduleDatabaseRepository
+    let database = DatabaseCoreData()
     
     init() {
-        repository = UserScheduleCoreDataRepository(coreDataManager: coreDataManager)
+        repository = UserScheduleDatabaseRepository(database: database)
     }
 
     @Test func shouldSaveAndRetrieve() async throws {
@@ -36,6 +37,9 @@ struct UserScheduleCoreDataRepositoryTest {
     }
     
     @Test func shouldRetrieveNilScheduleIfNothingIsSaved() async throws {
+        // given:
+        try await repository.deleteAll()
+        
         // when:
         let retrievedUserSchedule = try await repository.get()
         

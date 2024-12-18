@@ -31,6 +31,7 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     @Published public private(set) var movies: [Movie] = []
     @Published public private(set) var userSchedule: UserSchedule = UserSchedule(items: [])
     @Published private var theaters: [Theater] = []
+    private var saveTask: Task<Void, Never>?
     
     public init(router: ScheduleSelectionRouter, movieRepository: MovieRepository, userScheduleRepository: UserScheduleRepository, theaterRepository: TheaterRepository) {
         self.router = router
@@ -69,8 +70,12 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     
     public func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool) {
         _ = userSchedule.setItemSelected(movie: movie, theater: theater, schedule: schedule, selected: selected)
-        Task {
+        saveTask?.cancel()
+        saveTask = Task {
             do {
+                if Task.isCancelled {
+                    return
+                }
                 try await userScheduleRepository.save(userSchedule)
             } catch {
             }

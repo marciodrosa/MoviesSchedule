@@ -13,7 +13,7 @@ import MoviesScheduleDomain
 protocol JsonResourceFileLoader {
     
     /** Loads the objects from the JSON file of the entity, which should be located in the JsonFiles/ folder and named EntityName.json.  */
-    func load<T>() async throws(RetrieveError) -> [T] where T: Decodable, T: Sendable
+    func load<T>() async throws(CrudError) -> [T] where T: Decodable, T: Sendable
 }
 
 struct JsonResourceFileLoaderImpl: JsonResourceFileLoader {
@@ -24,7 +24,7 @@ struct JsonResourceFileLoaderImpl: JsonResourceFileLoader {
         self.bundle = bundle ?? Bundle.module
     }
     
-    func load<T>() async throws(RetrieveError) -> [T] where T: Decodable, T: Sendable {
+    func load<T>() async throws(CrudError) -> [T] where T: Decodable, T: Sendable {
         let fileResourcePath = bundle.path(forResource: "JsonFiles/\(T.self)", ofType: "json")
         guard let fileResourcePath else {
             throw .unreachable
@@ -34,18 +34,18 @@ struct JsonResourceFileLoaderImpl: JsonResourceFileLoader {
                 DispatchQueue.global().async {
                     InfrastructureUtils().fakeDelay(withSeconds: 0.5)
                     guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: fileResourcePath)) else {
-                        continuation.resume(throwing: RetrieveError.unreachable)
+                        continuation.resume(throwing: CrudError.unreachable)
                         return;
                     }
                     do {
                         let decodedData = try JSONDecoder().decode([T].self, from: jsonData)
                         continuation.resume(returning: decodedData)
                     } catch {
-                        continuation.resume(throwing: RetrieveError.invalidData)
+                        continuation.resume(throwing: CrudError.invalidData)
                     }
                 }
             }
-        } catch let error as RetrieveError {
+        } catch let error as CrudError {
             throw error
         } catch {
             throw .unknow

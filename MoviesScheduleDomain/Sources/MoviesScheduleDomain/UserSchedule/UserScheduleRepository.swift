@@ -7,6 +7,6 @@
 
 @MainActor
 public protocol UserScheduleRepository {
-    func get() async throws(RetrieveError) -> UserSchedule?
-    func save(_ userSchedule: UserSchedule) async throws(CreateError)
+    func get() async throws(CrudError) -> UserSchedule?
+    func save(_ userSchedule: UserSchedule) async throws(CrudError)
 }

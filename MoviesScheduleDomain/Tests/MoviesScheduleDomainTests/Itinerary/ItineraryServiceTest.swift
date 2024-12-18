@@ -15,11 +15,11 @@ struct ItineraryServiceTest {
         
         private var userSchedule: UserSchedule = UserSchedule(items: [])
         
-        func get() async throws(RetrieveError) -> UserSchedule? {
+        func get() async throws(CrudError) -> UserSchedule? {
             return userSchedule
         }
         
-        func save(_ userSchedule: UserSchedule) async throws(CreateError) {
+        func save(_ userSchedule: UserSchedule) async throws(CrudError) {
             self.userSchedule = userSchedule
         }
     }

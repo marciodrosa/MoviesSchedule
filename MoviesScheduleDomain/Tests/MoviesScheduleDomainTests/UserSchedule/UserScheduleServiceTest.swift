@@ -15,11 +15,11 @@ struct UserScheduleServiceTest {
         
         var movies: [Movie] = []
         
-        func getAll() async throws(RetrieveError) -> [Movie] {
+        func getAll() async throws(CrudError) -> [Movie] {
             return movies
         }
         
-        func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Movie] {
+        func get(byIds ids: [Int64]) async throws(CrudError) -> [Movie] {
             return movies.filter { ids.contains($0.id) }
         }
     }
@@ -28,11 +28,11 @@ struct UserScheduleServiceTest {
 
         var theaters: [Theater] = []
         
-        func get(byMovieIds movieIds: [Int64]) async throws(RetrieveError) -> [Theater] {
+        func get(byMovieIds movieIds: [Int64]) async throws(CrudError) -> [Theater] {
             return []
         }
         
-        func get(byIds ids: [Int64]) async throws(RetrieveError) -> [Theater] {
+        func get(byIds ids: [Int64]) async throws(CrudError) -> [Theater] {
             return theaters.filter { ids.contains($0.id) }
         }
     }
