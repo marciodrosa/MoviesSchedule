@@ -7,6 +7,7 @@
 
 import Foundation;
 
+/** A movie entity. */
 public struct Movie: Equatable, Sendable, Decodable, Identifiable {
     public let id: Int64
     public let title: String

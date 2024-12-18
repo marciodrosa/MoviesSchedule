@@ -7,8 +7,11 @@
 
 import Foundation
 
+/** Object that contains user schedule related operations. */
 @MainActor
 public protocol UserScheduleService {
+    
+    /** Loads and returns associated data and value objects of the itens of the given schedule. */
     func getItemsData(_ userSchedule: UserSchedule) async -> [UserScheduleItemData]
 }
 

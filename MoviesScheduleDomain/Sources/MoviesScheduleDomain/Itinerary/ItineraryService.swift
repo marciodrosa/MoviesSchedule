@@ -7,8 +7,11 @@
 
 import Foundation
 
+/** Object with itinerary related operations. */
 @MainActor
 public protocol ItineraryService {
+    
+    /** Creates and returns an Itinerary based on currently saved user schedule. */
     func createItinerary() async -> Itinerary
 }
 
