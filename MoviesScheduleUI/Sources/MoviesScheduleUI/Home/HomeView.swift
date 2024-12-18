@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/** The home view - the view that contains the tabs that shows the schedules and itinerary. */
 struct HomeView: View {
     
     let scheduleSelectionViewFactory: ScheduleSelectionViewFactory

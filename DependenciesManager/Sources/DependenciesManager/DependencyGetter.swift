@@ -7,6 +7,7 @@
 
 import Foundation
 
+/** The object that can be used to retrieve the implementation of a given protocol. */
 public protocol DependencyGetter {
     @MainActor func get<T>() -> T
     @MainActor func callAsFunction<T>() -> T

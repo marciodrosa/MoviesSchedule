@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import DependenciesManager
 
+/** The App class - basically the UI entry point. */
 public struct MoviesScheduleUIApp: App {
     
     public init() {

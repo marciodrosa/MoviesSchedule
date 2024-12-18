@@ -10,6 +10,7 @@ import Combine
 import MoviesScheduleApplication
 import MoviesScheduleDomain
 
+/** The view that shows the movies schedules and allows the player to pick them. */
 public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View {
     
     @ObservedObject var viewModel: ViewModel
@@ -153,10 +154,6 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         
         func clear() async {
             userSchedule = UserSchedule(items: [])
-        }
-        
-        func viewSummary() {
-            
         }
         
         func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool {

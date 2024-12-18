@@ -9,6 +9,7 @@ import SwiftUI
 import MoviesScheduleDomain
 import MoviesScheduleApplication
 
+/** The view that shows the user's itinerary. */
 struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     
     @ObservedObject var viewModel: ViewModel
