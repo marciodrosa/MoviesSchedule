@@ -68,7 +68,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         return VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 Text(movie.title).font(Font.system(size: 24))
-                Text(String(movie.duration)).font(Font.system(size: 12))
+                Text("\(movie.duration) minutes").font(Font.system(size: 12))
             }
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(viewModel.theaters(byMovie: movie)) { theater in
