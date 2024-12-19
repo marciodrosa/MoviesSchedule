@@ -1,0 +1,178 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "(Interval duration: %lld minutes)" : {
+      "comment" : "Text of an item in the itinerary between two movies in different theaters showing the available time of the interval",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duração do intervalo: %lld minutos)"
+          }
+        }
+      }
+    },
+    "%lld minutes" : {
+      "comment" : "Label below the movie title with the runtime duration",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld minutos"
+          }
+        }
+      }
+    },
+    "Go to %@ for the next movie" : {
+      "comment" : "Text of an item in the itinerary between two movies in different theaters",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vá ao cinema %@ para o próximo filme"
+          }
+        }
+      }
+    },
+    "Go to the Schedule tab and select the movies you want to see to create your itinerary." : {
+      "comment" : "Text of the empty state of the itinerary view",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione a aba Horários e selecione os filmes que você quer assistir para criar um itinerário."
+          }
+        }
+      }
+    },
+    "Interval (duration: %lld minutes)" : {
+      "comment" : "Text of an item in the itinerary regarding an interval between schedules with a given duration",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo (duração: %lld minutos)"
+          }
+        }
+      }
+    },
+    "Itinerary" : {
+      "comment" : "Title of the itinerary tab",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itinerário"
+          }
+        }
+      }
+    },
+    "No itinerary to show." : {
+      "comment" : "Title of the empty state of the itinerary view",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum itinerário disponível"
+          }
+        }
+      }
+    },
+    "Schedule" : {
+      "comment" : "Title of the schedule tab",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horários"
+          }
+        }
+      }
+    },
+    "This movie ends %lld minutes after movie %@ at %@ has started." : {
+      "comment" : "Text explaining a conflict of selected movies in the itinerary",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This movie ends %1$lld minutes after movie %2$@ at %3$@ has started."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este filme termina %lld minutos após o início do filme %@."
+          }
+        }
+      }
+    },
+    "This movie starts %lld minutes before movie %@ at %@ has ended." : {
+      "comment" : "Text explaining a conflict of selected movies in the itinerary",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This movie starts %1$lld minutes before movie %2$@ at %3$@ has ended."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este filme começa %lld minuto antes do filme %@ terminar."
+          }
+        }
+      }
+    },
+    "This movie starts at the same time as %@ at %@." : {
+      "comment" : "Text explaining a conflict of selected movies in the itinerary",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This movie starts at the same time as %1$@ at %2$@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este filme começa no mesmo horário de %@."
+          }
+        }
+      }
+    },
+    "Warning: no interval available" : {
+      "comment" : "Warning below of an item in the itinerary between two movies in different theaters without interval",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atenção: nenhum intervalo disponível"
+          }
+        }
+      }
+    },
+    "Warning: no interval between movies" : {
+      "comment" : "Text of an item in the itinerary between two schedules without interval between them",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atenção: nenhum intervalo entre os filmes."
+          }
+        }
+      }
+    },
+    "Warning: schedule conflict" : {
+      "comment" : "Title of the card in the itinerary with information regarding a schedule conflict",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atenção: conflito de horários"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

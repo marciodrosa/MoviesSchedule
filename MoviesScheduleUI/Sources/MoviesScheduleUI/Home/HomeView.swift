@@ -17,11 +17,16 @@ struct HomeView: View {
         TabView{
             AnyView(scheduleView)
             .tabItem {
-                tabItemView(label: "Schedule", icon: "square.and.pencil")
+                tabItemView(
+                    label: String(localized: "Schedule", comment: "Title of the schedule tab"),
+                    icon: "square.and.pencil"
+                )
             }
             AnyView(itineraryView)
             .tabItem {
-                tabItemView(label: "Itinerary", icon: "list.dash")
+                tabItemView(
+                    label: String(localized: "Itinerary", comment: "Title of the itinerary tab"),
+                    icon: "list.dash")
             }
         }
     }

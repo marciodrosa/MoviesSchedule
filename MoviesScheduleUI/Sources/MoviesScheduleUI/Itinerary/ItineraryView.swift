@@ -64,8 +64,8 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
             Image(systemName: "number")
                 .resizable()
                 .frame(width: 48, height: 48)
-            Text("No itinerary to show.")
-            Text("Go to the Schedule tab and select the movies you want to see to create your itinerary.")
+            Text("No itinerary to show.", comment: "Title of the empty state of the itinerary view")
+            Text("Go to the Schedule tab and select the movies you want to see to create your itinerary.", comment: "Text of the empty state of the itinerary view")
                 .multilineTextAlignment(.center)
         }
         .padding(.all, 40)
@@ -114,7 +114,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
             .frame(maxWidth: CGFloat.infinity, alignment: .leading)
             VStack(alignment: .leading, spacing: 4) {
                 Text(movie.title).font(Font.system(size: 24))
-                Text("\(movie.duration) minutes").font(Font.system(size: 12))
+                Text("\(movie.duration) minutes", comment: "Label below the movie title with the runtime duration").font(Font.system(size: 12))
             }
             .frame(maxWidth: CGFloat.infinity, alignment: .leading)
         }
@@ -123,11 +123,11 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     func conflictView(conflict: ItineraryConflict) -> some View {
         switch conflict {
         case .sameStartTime(movie: let movie, theater: let theater):
-            conflictView(text: "This movie starts at the same time as \(movie.title) at \(theater.name).")
+            conflictView(text: String(localized: "This movie starts at the same time as \(movie.title) at \(theater.name).", comment: "Text explaining a conflict of selected movies in the itinerary"))
         case .startTimeBeforeOtherMovieEnded(movie: let movie, theater: let theater, conflictDuration: let conflictDuration):
-            conflictView(text: "This movie starts \(conflictDuration) minutes before movie \(movie.title) at \(theater.name) has ended.")
+            conflictView(text: String(localized: "This movie starts \(conflictDuration) minutes before movie \(movie.title) at \(theater.name) has ended.", comment: "Text explaining a conflict of selected movies in the itinerary"))
         case .endTimeAfterOtherMovieStarted(movie: let movie, theater: let theater, conflictDuration: let conflictDuration):
-            conflictView(text: "This movie ends \(conflictDuration) minutes after movie \(movie.title) at \(theater.name) has started.")
+            conflictView(text: String(localized: "This movie ends \(conflictDuration) minutes after movie \(movie.title) at \(theater.name) has started.", comment: "Text explaining a conflict of selected movies in the itinerary"))
         }
     }
     
@@ -139,7 +139,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 .foregroundStyle(Color.red)
                 .frame(width: 24, height: 24)
             VStack(alignment: .leading) {
-                Text("Warning: schedule conflict")
+                Text("Warning: schedule conflict", comment: "Title of the card in the itinerary with information regarding a schedule conflict")
                     .font(Font.system(size: 20))
                     .bold()
                     .foregroundStyle(Color.red)
@@ -160,7 +160,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
             Image(systemName: "clock")
                 .resizable()
                 .frame(width: 20, height: 20)
-            Text("Interval (duration: \(duration) minutes)")
+            Text("Interval (duration: \(duration) minutes)", comment: "Text of an item in the itinerary regarding an interval between schedules with a given duration")
         }
         .frame(alignment: .leading)
         .padding(.vertical, 8)
@@ -178,7 +178,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
             Image(systemName: "exclamationmark.circle")
                 .resizable()
                 .frame(width: 20, height: 20)
-            Text("Warning: no interval between movies").bold()
+            Text("Warning: no interval between movies", comment: "Text of an item in the itinerary between two schedules without interval between them").bold()
         }
         .frame(alignment: .leading)
         .padding(.vertical, 8)
@@ -197,8 +197,8 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 .resizable()
                 .frame(width: 20, height: 20)
             VStack(alignment: .leading) {
-                Text("Go to \(theater.name) for the next movie")
-                Text("(Interval duration: \(availableTime) minutes)")
+                Text("Go to \(theater.name) for the next movie", comment: "Text of an item in the itinerary between two movies in different theaters")
+                Text("(Interval duration: \(availableTime) minutes)", comment: "Text of an item in the itinerary between two movies in different theaters showing the available time of the interval")
             }
         }
         .frame(alignment: .leading)
@@ -221,8 +221,8 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 .resizable()
                 .frame(width: 20, height: 20)
             VStack(alignment: .leading) {
-                Text("Go to \(theater.name) for the next movie")
-                Text("Warning: no interval available").bold()
+                Text("Go to \(theater.name) for the next movie", comment: "Text of an item in the itinerary between two movies in different theaters")
+                Text("Warning: no interval available", comment: "Warning below of an item in the itinerary between two movies in different theaters without interval").bold()
             }
         }
         .frame(alignment: .leading)
