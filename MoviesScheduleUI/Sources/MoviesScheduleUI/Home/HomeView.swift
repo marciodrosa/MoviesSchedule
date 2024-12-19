@@ -29,6 +29,7 @@ struct HomeView: View {
                     icon: "list.dash")
             }
         }
+        .preferredColorScheme(.light)
     }
     
     var scheduleView: any View {

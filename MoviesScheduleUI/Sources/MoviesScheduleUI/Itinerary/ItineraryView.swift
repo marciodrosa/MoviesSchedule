@@ -33,6 +33,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 await viewModel.load()
             }
         }
+        .preferredColorScheme(.light)
     }
     
     var content: some View {
