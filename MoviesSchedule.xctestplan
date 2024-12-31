@@ -1,0 +1,59 @@
+{
+  "configurations" : [
+    {
+      "id" : "5B031F3D-16E4-42EE-A9DD-389B74AEC889",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MoviesSchedule.xcodeproj",
+        "identifier" : "D6E557CB2CF8F6AD00945C31",
+        "name" : "MoviesScheduleTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DependenciesManager",
+        "identifier" : "DependenciesManagerTests",
+        "name" : "DependenciesManagerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MoviesScheduleApplication",
+        "identifier" : "MoviesScheduleApplicationTests",
+        "name" : "MoviesScheduleApplicationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:TMDBClient",
+        "identifier" : "TMDBClientTests",
+        "name" : "TMDBClientTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MoviesScheduleInfrastructure",
+        "identifier" : "MoviesScheduleInfrastructureTests",
+        "name" : "MoviesScheduleInfrastructureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MoviesScheduleDomain",
+        "identifier" : "MoviesScheduleDomainTests",
+        "name" : "MoviesScheduleDomainTests"
+      }
+    }
+  ],
+  "version" : 1
+}
