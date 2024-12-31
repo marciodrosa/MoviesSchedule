@@ -29,14 +29,7 @@ struct MovieFromTMDBRepository: MovieRepository {
                     result.append(Movie(withTMDBMovieDetails: movieDetails))
                 }
             } catch {
-                switch error {
-                case .http(_, _):
-                    throw .unreachable
-                case .data(_):
-                    throw .invalidData
-                case .unknow(_):
-                    throw .unknow
-                }
+                throw .from(tmdbError: error)
             }
         }
         return result
