@@ -32,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D6130A7A2D238FDE0007C13C /* TMDBClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TMDBClient; sourceTree = "<group>"; };
 		D677E22F2CFCF65E0058D9EE /* MoviesScheduleApplication */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MoviesScheduleApplication; sourceTree = "<group>"; };
 		D677E2462CFCFE390058D9EE /* MoviesScheduleDomain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MoviesScheduleDomain; sourceTree = "<group>"; };
 		D683BA4E2D013405006652A4 /* DependenciesManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DependenciesManager; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 		D6E557AF2CF8F6AC00945C31 = {
 			isa = PBXGroup;
 			children = (
+				D6130A7A2D238FDE0007C13C /* TMDBClient */,
 				D683BA4E2D013405006652A4 /* DependenciesManager */,
 				D6B2A1B12CFFC4D50059A74B /* MoviesScheduleInfrastructure */,
 				D6C97CBE2CFE761B0058D7D1 /* MoviesScheduleUI */,
