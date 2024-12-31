@@ -7,7 +7,7 @@
 
 import Foundation
 
-/** Client for the TMDB (themoviedb.org) API. */
+/** Client for the TMDB (themoviedb.org) API. The API key must be set in the Info.plist file using the key TMDBAPIKey. */
 @MainActor
 public protocol ApiClient {
     
@@ -17,11 +17,7 @@ public protocol ApiClient {
 
 class ApiClientImpl: ApiClient {
     
-    private let apiKey: String
-    
-    init(apiKey: String) {
-        self.apiKey = apiKey
-    }
+    private let apiKey: String = Bundle.main.infoDictionary?["TMDBAPIKey"] as? String ?? ""
     
     func getMovieDetails(id: Int64) async throws(ApiError) -> MovieDetails? {
         return try await call(endpoint: .getMovieDetails(id: id))
