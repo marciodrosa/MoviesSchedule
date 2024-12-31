@@ -12,7 +12,7 @@ import TMDBClient
 public func setupDependencies() -> [DependencyInstance<Any, Any>] {
     return [
         .factory(JsonResourceFileLoader.self) { _ in JsonResourceFileLoaderImpl() },
-        .factory(MovieRepository.self) { getter in MovieFromFileRepository(jsonResourceFileLoader: getter()) },
+        .factory(MovieRepository.self) { getter in MovieFromTMDBRepository(tmdbClient: getter()) },
         .factory(TheaterRepository.self) { getter in TheaterFromFileRepository(jsonResourceFileLoader: getter()) },
         .factory(UserScheduleRepository.self) { getter in UserScheduleDatabaseRepository(database: getter()) },
         .singleton(Database.self, { _ in DatabaseCoreData() }),
