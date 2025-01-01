@@ -8,6 +8,5 @@
 /** The repository for the movie entity. */
 @MainActor
 public protocol MovieRepository {
-    func getAll() async throws(CrudError) -> [Movie]
     func get(byIds: [Int64]) async throws(CrudError) -> [Movie]
 }

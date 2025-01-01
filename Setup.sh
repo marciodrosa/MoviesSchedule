@@ -1,6 +1,19 @@
 # Run this scrip is only needed the first time the project is cloned. After that, there's no need to run it again unless
 # some content of it is changed.
 
+# Secrets file generation:
+echo "====================================="
+echo "SECRETS CONFIGURATION"
+echo "====================================="
+read -p "Enter the API key for TMDB (https://www.themoviedb.org/settings/api): " tmdbApiKey
+
+echo "public enum Secrets: String {" > Secrets/Sources/Secrets.swift
+echo "  case tmdbApiKey = \"$tmdbApiKey\"" >> Secrets/Sources/Secrets.swift
+echo "}" >> Secrets/Sources/Secrets.swift
+
+read -p  "Secrets file generated. Continue to install dependencies and tools." -n1 -s
+echo ""
+
 # Xcode Command Line Tools:
 xcode-select --install
 
@@ -42,13 +55,6 @@ ruby -v
 
 # Fastlane:
 gem install fastlane -v 2.219.0
-
-# Secrets:
-echo "====================================="
-echo "SECRETS CONFIGURATION"
-echo "====================================="
-read -p "Enter the API key for TMDB (https://www.themoviedb.org/settings/api): " tmdbApiKey
-echo "TMDB-API-KEY=$tmdbApiKey" > .env
 
 # Finish:
 echo "====================================="

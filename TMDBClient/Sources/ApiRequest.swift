@@ -13,22 +13,24 @@ struct ApiRequest {
     let apiKey: String
     let endpoint: ApiEndpoint
     
-    /** Converts this request to an URLRequest. */
-    var urlRequest: URLRequest {
-        var url = URL(string: "https://api.themoviedb.org/3")!
-        url.appendPathComponent(endpoint.path)
-        var request = URLRequest(url: url)
-        request.httpMethod = endpoint.method
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "Authorization": "Bearer \(apiKey)"
-        ]
-        return request
+    /** This request converted to an URLRequest. */
+    let urlRequest: URLRequest
+    
+    var logString: String {
+        return "\(endpoint.method) \(urlRequest.url?.absoluteString ?? "")"
     }
     
     init(apiKey: String, endpoint: ApiEndpoint) {
         self.apiKey = apiKey
         self.endpoint = endpoint
+        var url = URL(string: "https://api.themoviedb.org/3")!
+        url.appendPathComponent(endpoint.path)
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = endpoint.method
+        urlRequest.allHTTPHeaderFields = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        self.urlRequest = urlRequest
     }
 }
-

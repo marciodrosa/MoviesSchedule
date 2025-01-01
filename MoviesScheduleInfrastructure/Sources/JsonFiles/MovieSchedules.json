@@ -1,46 +1,46 @@
 [
     {
-        "movieId": 1,
+        "movieId": 262,
         "theaterId": 1,
         "schedules": ["14:00", "18:00"]
     },
     {
-        "movieId": 1,
+        "movieId": 262,
         "theaterId": 2,
         "schedules": ["14:00", "18:00", "21:30"]
     },
     {
-        "movieId": 1,
+        "movieId": 262,
         "theaterId": 3,
         "schedules": ["17:00"]
     },
     {
-        "movieId": 2,
+        "movieId": 103,
         "theaterId": 2,
         "schedules": ["15:00", "17:00"]
     },
     {
-        "movieId": 2,
+        "movieId": 103,
         "theaterId": 3,
         "schedules": ["14:00", "18:00", "20:30"]
     },
     {
-        "movieId": 3,
+        "movieId": 524,
         "theaterId": 1,
         "schedules": ["13:50", "18:45"]
     },
     {
-        "movieId": 4,
+        "movieId": 16153,
         "theaterId": 1,
         "schedules": ["16:00", "19:00", "21:30"]
     },
     {
-        "movieId": 4,
+        "movieId": 16153,
         "theaterId": 2,
         "schedules": ["14:00", "18:00"]
     },
     {
-        "movieId": 4,
+        "movieId": 16153,
         "theaterId": 3,
         "schedules": ["00:00"]
     }

@@ -14,13 +14,6 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:MoviesSchedule.xcodeproj",
-        "identifier" : "D6E557CB2CF8F6AD00945C31",
-        "name" : "MoviesScheduleTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:DependenciesManager",
         "identifier" : "DependenciesManagerTests",
         "name" : "DependenciesManagerTests"

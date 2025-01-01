@@ -31,7 +31,7 @@ struct MovieFromTMDBRepositoryTest {
         repository = MovieFromTMDBRepository(tmdbClient: TMDBApiClientMock())
     }
 
-    @Test func shouldGetAllMoviesFromJsonFile() async throws {
+    @Test func shouldGetByIds() async throws {
         // when:
         let result = try! await repository.get(byIds: [10, 15, 30])
         

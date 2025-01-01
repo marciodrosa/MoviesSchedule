@@ -17,10 +17,6 @@ struct MovieFromTMDBRepository: MovieRepository {
         self.tmdbClient = tmdbClient
     }
     
-    func getAll() async throws((CrudError)) -> [Movie] {
-        return []
-    }
-    
     func get(byIds ids: [Int64]) async throws((CrudError)) -> [Movie] {
         var result: [Movie] = []
         for id in ids {

@@ -23,5 +23,13 @@ struct ApiRequestTest {
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer ABC123")
         #expect(urlRequest.value(forHTTPHeaderField: "accept") == "application/json")
     }
+    
+    @Test func shouldConvertToLogString() async throws {
+        // given:
+        let request = ApiRequest(apiKey: "ABC123", endpoint: .getMovieDetails(id: 10))
+        
+        // then:
+        #expect(request.logString == "GET https://api.themoviedb.org/3/movie/10")
+    }
 
 }

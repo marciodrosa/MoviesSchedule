@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Secrets
 
 /** Client for the TMDB (themoviedb.org) API. The API key must be set in the Info.plist file using the key TMDBAPIKey. */
 @MainActor
@@ -17,23 +18,34 @@ public protocol ApiClient {
 
 class ApiClientImpl: ApiClient {
     
-    private let apiKey: String = Bundle.main.infoDictionary?["TMDBAPIKey"] as? String ?? ""
-    
     func getMovieDetails(id: Int64) async throws(ApiError) -> MovieDetails? {
         return try await call(endpoint: .getMovieDetails(id: id))
     }
     
     private func call<T: Decodable>(endpoint: ApiEndpoint) async throws(ApiError) -> T? {
-        let request = ApiRequest(apiKey: apiKey, endpoint: endpoint)
+        let request = ApiRequest(apiKey: Secrets.tmdbApiKey.rawValue, endpoint: endpoint)
+        log(request.logString)
         do {
             let (data, _) = try await URLSession.shared.data(for: request.urlRequest)
-            return try JSONDecoder().decode(T.self, from: data)
-        } catch let error as URLError {
-            throw .http(statusCode: error.errorCode, localizedDescription: error.localizedDescription)
-        } catch let error as DecodingError {
-            throw .data(underlyingError: error)
+            let decodedData = try JSONDecoder().decode(T.self, from: data)
+            log("API call returned successfully")
+            return decodedData
         } catch {
-            throw .unknow(underlyingError: error)
+            let apiError = ApiError.fromError(error)
+            logError(apiError.localizedDescription)
+            throw apiError
         }
+    }
+    
+    private func log(_ message: String) {
+        print(logString(message))
+    }
+    
+    private func logError(_ error: String) {
+        print(logString("[ERROR] \(error)"))
+    }
+    
+    private func logString(_ content: String) -> String {
+        "[TMDB API] \(content)"
     }
 }

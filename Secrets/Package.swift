@@ -4,31 +4,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "TMDBClient",
-    platforms: [.iOS(.v15)],
+    name: "Secrets",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "TMDBClient",
-            targets: ["TMDBClient"]),
-    ],
-    dependencies: [
-        .package(name: "DependenciesManager", path: "../DependenciesManager"),
-        .package(name: "Secrets", path: "../Secrets")
+            name: "Secrets",
+            targets: ["Secrets"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "TMDBClient",
-            dependencies: [
-                "DependenciesManager",
-                "Secrets"
-            ]
-        ),
-        .testTarget(
-            name: "TMDBClientTests",
-            dependencies: ["TMDBClient"]
-        ),
+            name: "Secrets"),
+
     ]
 )

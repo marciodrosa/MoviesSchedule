@@ -25,7 +25,7 @@ struct UserScheduleServiceTest {
     }
     
     class TheaterRepositoryMock: TheaterRepository {
-
+        
         var theaters: [Theater] = []
         
         func get(byMovieIds movieIds: [Int64]) async throws(CrudError) -> [Theater] {
@@ -34,6 +34,10 @@ struct UserScheduleServiceTest {
         
         func get(byIds ids: [Int64]) async throws(CrudError) -> [Theater] {
             return theaters.filter { ids.contains($0.id) }
+        }
+        
+        func getAll() async throws(MoviesScheduleDomain.CrudError) -> [MoviesScheduleDomain.Theater] {
+            return theaters
         }
     }
     
