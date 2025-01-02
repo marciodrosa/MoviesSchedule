@@ -18,6 +18,12 @@ public protocol ApiClient: Sendable {
 
 class ApiClientImpl: ApiClient {
     
+    let urlSession: URLSession
+    
+    init() {
+        urlSession = URLSession(configuration: .default)
+    }
+    
     func getMovieDetails(id: Int64) async throws(ApiError) -> MovieDetails? {
         return try await call(endpoint: .getMovieDetails(id: id))
     }
@@ -26,7 +32,7 @@ class ApiClientImpl: ApiClient {
         let request = ApiRequest(apiKey: Secrets.tmdbApiKey.rawValue, endpoint: endpoint)
         log(request.logString)
         do {
-            let (data, _) = try await URLSession.shared.data(for: request.urlRequest)
+            let (data, _) = try await urlSession.data(for: request.urlRequest)
             let decodedData = try JSONDecoder().decode(T.self, from: data)
             log("API call returned successfully")
             return decodedData
