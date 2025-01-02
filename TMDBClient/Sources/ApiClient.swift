@@ -10,7 +10,7 @@ import Secrets
 
 /** Client for the TMDB (themoviedb.org) API. The API key must be set in the Info.plist file using the key TMDBAPIKey. */
 @MainActor
-public protocol ApiClient {
+public protocol ApiClient: Sendable {
     
     /** Fetches the movie details by movie ID. Returns nil if not found.  */
     func getMovieDetails(id: Int64) async throws(ApiError) -> MovieDetails?

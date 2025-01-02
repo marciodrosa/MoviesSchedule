@@ -18,16 +18,28 @@ struct MovieFromTMDBRepository: MovieRepository {
     }
     
     func get(byIds ids: [Int64]) async throws((CrudError)) -> [Movie] {
-        var result: [Movie] = []
-        for id in ids {
-            do {
-                if let movieDetails = try await tmdbClient.getMovieDetails(id: id) {
-                    result.append(Movie(withTMDBMovieDetails: movieDetails))
+        do {
+            return try await withThrowingTaskGroup(of: Movie?.self) { group in
+                for id in ids {
+                    group.addTask {
+                        if let movieDetails = try await tmdbClient.getMovieDetails(id: id) {
+                            return Movie(withTMDBMovieDetails: movieDetails)
+                        }
+                        return nil
+                    }
                 }
-            } catch {
-                throw .from(tmdbError: error)
+                var result: [Movie] = []
+                for try await movie in group {
+                    if let movie {
+                        result.append(movie)
+                    }
+                }
+                return result
             }
+        } catch let error as TMDBClient.ApiError {
+            throw .from(tmdbError: error)
+        } catch {
+            throw .unknow
         }
-        return result
     }
 }
