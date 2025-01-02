@@ -23,6 +23,17 @@
         }
       }
     },
+    "About" : {
+      "comment" : "Title of the about tab",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre"
+          }
+        }
+      }
+    },
     "Go to %@ for the next movie" : {
       "comment" : "Text of an item in the itinerary between two movies in different theaters",
       "localizations" : {
@@ -67,6 +78,17 @@
         }
       }
     },
+    "Movie Schedule is an iOS demo app that allows the user to pick a few movies to watch in the theaters and then generate an itinerary containing the schedules, available intervals between the pictures and possible conflicts.\n\nThis is just a demo, containing fake data, made as an example of a Swift app that uses MVVM, DDD and modern Swift async programming, as well other technologies like SwiftUI and CoreData." : {
+      "comment" : "The about text",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movie Schedule é um app de iOS de demonstração que permite ao usuário selecionar alguns filmes para assistir nos cinemas e então gerar um itinerário contendo os horários, intervalos entre os filmes e possíveis conflitos.\u0003\u0003\n\nÉ apenas um demo, contendo alguns dados que não são reais, criado como um exemplo de um app feito em Swift que utiliza MVVM, DDD and programação assíncrona moderna, entre outras tecnologias - como SwiftUI e CoreData."
+          }
+        }
+      }
+    },
     "No itinerary to show." : {
       "comment" : "Title of the empty state of the itinerary view",
       "localizations" : {
@@ -92,12 +114,6 @@
     "This movie ends %lld minutes after movie %@ at %@ has started." : {
       "comment" : "Text explaining a conflict of selected movies in the itinerary",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "This movie ends %1$lld minutes after movie %2$@ at %3$@ has started."
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -109,12 +125,6 @@
     "This movie starts %lld minutes before movie %@ at %@ has ended." : {
       "comment" : "Text explaining a conflict of selected movies in the itinerary",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "This movie starts %1$lld minutes before movie %2$@ at %3$@ has ended."
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -126,16 +136,21 @@
     "This movie starts at the same time as %@ at %@." : {
       "comment" : "Text explaining a conflict of selected movies in the itinerary",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "This movie starts at the same time as %1$@ at %2$@."
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este filme começa no mesmo horário de %@."
+          }
+        }
+      }
+    },
+    "This product uses the TMDB API but is not endorsed or certified by TMDB." : {
+      "comment" : "The mandatory TMDB credits text",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este produto utliza a API do TMDB, mas não é endossado ou certificado pelo TMDB."
           }
         }
       }

@@ -28,6 +28,12 @@ struct HomeView: View {
                     label: String(localized: "Itinerary", comment: "Title of the itinerary tab"),
                     icon: "list.dash")
             }
+            AboutView()
+            .tabItem {
+                tabItemView(
+                    label: String(localized: "About", comment: "Title of the about tab"),
+                    icon: "info")
+            }
         }
         .preferredColorScheme(.light)
     }
