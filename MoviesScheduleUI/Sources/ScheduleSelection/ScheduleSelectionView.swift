@@ -24,6 +24,8 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
             VStack {
                 if viewModel.loading {
                     ProgressView()
+                } else if viewModel.loadFailed {
+                    errorEmptyState
                 } else {
                     ScrollView(.vertical) {
                         VStack(
@@ -112,6 +114,14 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         }
     }
     
+    var errorEmptyState: some View {
+        EmptyStateView(
+            systemImageName: "x.circle",
+            title: String(localized: "Error loading data", comment: "Title of the empty state of the schedules view when there is an error"),
+            text: String(localized: "Please try again in a few minutes.", comment: "Text of the empty state of the schedules view when there is an error")
+        )
+    }
+    
     private func createScheduleItemBinding(movie: Movie, theater: Theater, schedule: String) -> Binding<Bool> {
         return Binding {
             viewModel.isScheduleSelected(movie: movie, theater: theater, schedule: schedule)
@@ -126,6 +136,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
     final class ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
         
         @Published var loading: Bool = false
+        @Published var loadFailed: Bool = false
         
         var movies: [Movie] = [
             Movie(id: 1, title: "Star Wars", duration: 130),

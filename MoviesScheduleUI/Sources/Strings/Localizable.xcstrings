@@ -34,6 +34,17 @@
         }
       }
     },
+    "Error loading data" : {
+      "comment" : "Title of the empty state of the schedules view when there is an error",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro ao carregar dados"
+          }
+        }
+      }
+    },
     "Go to %@ for the next movie" : {
       "comment" : "Text of an item in the itinerary between two movies in different theaters",
       "localizations" : {
@@ -96,6 +107,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhum itinerário disponível"
+          }
+        }
+      }
+    },
+    "Please try again in a few minutes." : {
+      "comment" : "Text of the empty state of the schedules view when there is an error",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, tente novamente dentro de alguns minutos."
           }
         }
       }

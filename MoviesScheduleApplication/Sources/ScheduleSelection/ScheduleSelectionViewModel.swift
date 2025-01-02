@@ -12,6 +12,7 @@ import MoviesScheduleDomain
 @MainActor
 public protocol ScheduleSelectionViewModel: ObservableObject {
     var loading: Bool { get }
+    var loadFailed: Bool { get }
     var movies: [Movie] { get }
     var userSchedule: UserSchedule { get }
     func theaters(byMovie: Movie) -> [Theater]
@@ -27,6 +28,7 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     private let userScheduleRepository: UserScheduleRepository
     private let theaterRepository: TheaterRepository
     @Published public private(set) var loading: Bool = false
+    @Published public private(set) var loadFailed: Bool = false
     @Published public private(set) var movies: [Movie] = []
     @Published public private(set) var userSchedule: UserSchedule = UserSchedule(items: [])
     @Published private var theaters: [Theater] = []
@@ -47,10 +49,15 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
             return
         }
         loading = true
-        userSchedule = (try? await userScheduleRepository.get()) ?? UserSchedule(items: [])
-        theaters = (try? await theaterRepository.getAll()) ?? []
-        let movieIds = Array(theaters.reduce(Set<Int64>(), { ids, theater in ids.union(theater.movieSchedules.map({$0.movieId})) }))
-        movies = (try? await movieRepository.get(byIds: movieIds))?.sorted { $0.title < $1.title } ?? []
+        loadFailed = false
+        do {
+            userSchedule = (try await userScheduleRepository.get()) ?? UserSchedule(items: [])
+            theaters = try await theaterRepository.getAll()
+            let movieIds = Array(theaters.reduce(Set<Int64>(), { ids, theater in ids.union(theater.movieSchedules.map({$0.movieId})) }))
+            movies = (try await movieRepository.get(byIds: movieIds)).sorted { $0.title < $1.title }
+        } catch {
+            loadFailed = true
+        }
         loading = false
     }
     

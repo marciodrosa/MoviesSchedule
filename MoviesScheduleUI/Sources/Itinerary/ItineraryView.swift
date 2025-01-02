@@ -61,15 +61,11 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     }
     
     var emptyState: some View {
-        VStack(alignment: .center, spacing: 48) {
-            Image(systemName: "number")
-                .resizable()
-                .frame(width: 48, height: 48)
-            Text("No itinerary to show.", comment: "Title of the empty state of the itinerary view")
-            Text("Go to the Schedule tab and select the movies you want to see to create your itinerary.", comment: "Text of the empty state of the itinerary view")
-                .multilineTextAlignment(.center)
-        }
-        .padding(.all, 40)
+        EmptyStateView(
+            systemImageName: "number",
+            title: String(localized: "No itinerary to show.", comment: "Title of the empty state of the itinerary view"),
+            text: String(localized: "Go to the Schedule tab and select the movies you want to see to create your itinerary.", comment: "Text of the empty state of the itinerary view")
+        )
     }
     
     func movieView(movie: Movie, theater: Theater, schedule: String, conflicts: [ItineraryConflict] = []) -> some View {
