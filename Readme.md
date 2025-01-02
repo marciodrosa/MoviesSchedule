@@ -78,3 +78,9 @@ Everything else is spread in other local Swift packages modules, four of them re
 
 <img alt="Screenshot of the home screen of the app containing a list of movies and schedules that can be picked by the user" src="Screenshot1.png" alt="drawing" width="500"/>
 <img alt="Screenshot of the itinerary view, showing a sorted list of the schedules selected by the user in the prior screen" src="Screenshot2.png" alt="drawing" width="500"/>
+
+## About TMDB
+
+<img alt="TMDB logo" src="MoviesScheduleUI/Sources/Resources/Media.xcassets/TMDBLogo.imageset/TMDBLogo.svg" alt="drawing" width="250"/>
+
+*This product uses the TMDB API but is not endorsed or certified by TMDB.*
