@@ -29,7 +29,7 @@ class ApiClientImpl: ApiClient {
     }
     
     private func call<T: Decodable>(endpoint: ApiEndpoint) async throws(ApiError) -> T? {
-        let request = ApiRequest(apiKey: Secrets.tmdbApiKey.rawValue, endpoint: endpoint)
+        let request = ApiRequest(apiKey: Secrets.tmdbApiKey.rawValue, endpoint: endpoint, locale: Locale.current)
         log(request.logString)
         do {
             let (data, _) = try await urlSession.data(for: request.urlRequest)

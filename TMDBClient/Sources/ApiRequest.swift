@@ -20,10 +20,16 @@ struct ApiRequest {
         return "\(endpoint.method) \(urlRequest.url?.absoluteString ?? "")"
     }
     
-    init(apiKey: String, endpoint: ApiEndpoint) {
+    init(apiKey: String, endpoint: ApiEndpoint, locale: Locale? = nil) {
         self.apiKey = apiKey
         self.endpoint = endpoint
-        var url = URL(string: "https://api.themoviedb.org/3")!
+        var urlComponents = URLComponents(string: "https://api.themoviedb.org/3")!
+        if let locale, let languageCode = locale.languageCode, let regionCode = locale.regionCode {
+            urlComponents.queryItems = [
+                URLQueryItem(name: "language", value: "\(languageCode)-\(regionCode)")
+            ]
+        }
+        var url = urlComponents.url!
         url.appendPathComponent(endpoint.path)
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = endpoint.method

@@ -5,6 +5,7 @@
 //  Created by Marcio Rosa on 31/12/24.
 //
 
+import Foundation
 import Testing
 @testable import TMDBClient
 
@@ -19,6 +20,20 @@ struct ApiRequestTest {
         
         // then:
         #expect(urlRequest.url?.absoluteString == "https://api.themoviedb.org/3/movie/10")
+        #expect(urlRequest.httpMethod == "GET")
+        #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer ABC123")
+        #expect(urlRequest.value(forHTTPHeaderField: "accept") == "application/json")
+    }
+    
+    @Test func shouldConvertRequestToURLRequestWithLocale() async throws {
+        // given:
+        let request = ApiRequest(apiKey: "ABC123", endpoint: .getMovieDetails(id: 10), locale: Locale(identifier: "pt_BR"))
+        
+        // when:
+        let urlRequest = request.urlRequest
+        
+        // then:
+        #expect(urlRequest.url?.absoluteString == "https://api.themoviedb.org/3/movie/10?language=pt-BR")
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer ABC123")
         #expect(urlRequest.value(forHTTPHeaderField: "accept") == "application/json")

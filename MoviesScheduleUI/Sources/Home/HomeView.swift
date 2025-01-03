@@ -18,20 +18,20 @@ struct HomeView: View {
             AnyView(scheduleView)
             .tabItem {
                 tabItemView(
-                    label: String(localized: "Schedule", comment: "Title of the schedule tab"),
+                    label: String(localized: "Schedule", bundle: Bundle.module, comment: "Title of the schedule tab"),
                     icon: "square.and.pencil"
                 )
             }
             AnyView(itineraryView)
             .tabItem {
                 tabItemView(
-                    label: String(localized: "Itinerary", comment: "Title of the itinerary tab"),
+                    label: String(localized: "Itinerary", bundle: Bundle.module, comment: "Title of the itinerary tab"),
                     icon: "list.dash")
             }
             AboutView()
             .tabItem {
                 tabItemView(
-                    label: String(localized: "About", comment: "Title of the about tab"),
+                    label: String(localized: "About", bundle: Bundle.module, comment: "Title of the about tab"),
                     icon: "info")
             }
         }

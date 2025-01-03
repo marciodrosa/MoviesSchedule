@@ -72,7 +72,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         return VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 Text(movie.title).font(Font.system(size: 24))
-                Text("\(movie.duration) minutes", comment: "Label below the movie title with the runtime duration").font(Font.system(size: 12))
+                Text("\(movie.duration) minutes", bundle: Bundle.module, comment: "Label below the movie title with the runtime duration").font(Font.system(size: 12))
             }
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(viewModel.theaters(byMovie: movie)) { theater in
@@ -117,8 +117,8 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
     var errorEmptyState: some View {
         EmptyStateView(
             systemImageName: "x.circle",
-            title: String(localized: "Error loading data", comment: "Title of the empty state of the schedules view when there is an error"),
-            text: String(localized: "Please try again in a few minutes.", comment: "Text of the empty state of the schedules view when there is an error")
+            title: String(localized: "Error loading data", bundle: Bundle.module, comment: "Title of the empty state of the schedules view when there is an error"),
+            text: String(localized: "Please try again in a few minutes.", bundle: Bundle.module, comment: "Text of the empty state of the schedules view when there is an error")
         )
     }
     
