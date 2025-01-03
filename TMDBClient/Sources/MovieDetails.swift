@@ -5,6 +5,7 @@
 //  Created by Marcio Rosa on 30/12/24.
 //
 
+/** Data object for the movies retrieved from the API. */
 public struct MovieDetails: Sendable, Identifiable, Decodable {
     public let id: Int64
     public let runtime: Int32
