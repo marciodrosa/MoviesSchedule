@@ -30,9 +30,15 @@ struct TheaterFromFileRepository: TheaterRepository {
         return mountAggregate(allTheaters: allTheaters, allSchedules: allSchedules, filterByIds: ids)
     }
     
-    private func mountAggregate(allTheaters: [Theater], allSchedules: [MovieSchedules], filterByIds ids: [Int64]) -> [Theater] {
+    func getAll() async throws(MoviesScheduleDomain.CrudError) -> [MoviesScheduleDomain.Theater] {
+        let allTheaters: [Theater] = try await jsonResourceFileLoader.load()
+        let allSchedules: [MovieSchedules] = try await jsonResourceFileLoader.load()
+        return mountAggregate(allTheaters: allTheaters, allSchedules: allSchedules)
+    }
+    
+    private func mountAggregate(allTheaters: [Theater], allSchedules: [MovieSchedules], filterByIds ids: [Int64]? = nil) -> [Theater] {
         return allTheaters
-            .filter { ids.contains($0.id) }
+            .filter { ids == nil || ids!.contains($0.id) }
             .map { theater in
                 var theaterWithSchedules = theater
                 theaterWithSchedules.movieSchedules = allSchedules.filter { $0.theaterId == theater.id }

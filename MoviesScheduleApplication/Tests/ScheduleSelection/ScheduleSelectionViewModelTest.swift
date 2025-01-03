@@ -27,7 +27,7 @@ class ScheduleSelectionViewModelTest {
     }
     
     class TheaterRepositoryMock: TheaterRepository {
-
+        
         var theaters: [Theater] = []
         
         func get(byMovieIds: [Int64]) async throws(CrudError) -> [Theater] {
@@ -35,6 +35,10 @@ class ScheduleSelectionViewModelTest {
         }
         
         func get(byIds: [Int64]) async throws(CrudError) -> [Theater] {
+            return theaters
+        }
+        
+        func getAll() async throws(MoviesScheduleDomain.CrudError) -> [MoviesScheduleDomain.Theater] {
             return theaters
         }
     }

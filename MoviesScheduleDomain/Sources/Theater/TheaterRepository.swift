@@ -10,4 +10,5 @@
 public protocol TheaterRepository {
     func get(byMovieIds: [Int64]) async throws(CrudError) -> [Theater]
     func get(byIds: [Int64]) async throws(CrudError) -> [Theater]
+    func getAll() async throws(CrudError) -> [Theater]
 }

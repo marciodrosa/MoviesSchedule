@@ -23,6 +23,9 @@ let package = Package(
             name: "MoviesScheduleUI",
             dependencies: [
                 "MoviesScheduleApplication"
+            ],
+            resources: [
+                .process("Resources")
             ]
         )
     ]
