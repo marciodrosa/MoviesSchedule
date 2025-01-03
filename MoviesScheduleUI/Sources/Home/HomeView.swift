@@ -35,7 +35,6 @@ struct HomeView: View {
                     icon: "info")
             }
         }
-        .preferredColorScheme(.light)
     }
     
     var scheduleView: any View {
