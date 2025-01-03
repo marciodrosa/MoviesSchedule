@@ -15,6 +15,8 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
     
     @ObservedObject var viewModel: ViewModel
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
@@ -37,6 +39,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
                             }
                         }
                     }
+                    .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.15) : Color.white)
                 }
             }
             .toolbar {
@@ -65,7 +68,6 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
                 await viewModel.load()
             }
         }
-        .preferredColorScheme(.light)
     }
     
     func movieView(_ movie: Movie) -> some View {
@@ -85,7 +87,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         .padding(.all, 16)
         .background {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white)
+                .fill(colorScheme == .dark ? Color.black : Color.white)
                 .shadow(color: Color.black.opacity(0.25), radius: 6, x: 2, y: 3)
         }
         .padding(.horizontal, 16)

@@ -14,6 +14,8 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     
     @ObservedObject var viewModel: ViewModel
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
@@ -33,7 +35,6 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 await viewModel.load()
             }
         }
-        .preferredColorScheme(.light)
     }
     
     var content: some View {
@@ -58,6 +59,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                 }
             }
         }
+        .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.15) : Color.white)
     }
     
     var emptyState: some View {
@@ -79,7 +81,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         .padding(.all, 16)
         .background {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white)
+                .fill(colorScheme == .dark ? Color.black : Color.white)
                 .shadow(color: Color.black.opacity(0.25), radius: 6, x: 2, y: 3)
         }
         .padding(.horizontal, 16)
@@ -162,6 +164,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         .frame(alignment: .leading)
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
+        .foregroundStyle(Color.black)
         .background {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(red: 1, green: 0.9, blue: 0.7))
@@ -180,6 +183,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         .frame(alignment: .leading)
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
+        .foregroundStyle(Color.black)
         .background {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(red: 1, green: 0.7, blue: 0.0))
@@ -201,6 +205,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         .frame(alignment: .leading)
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
+        .foregroundStyle(Color.black)
         .background {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(red: 0.9, green: 1, blue: 0.7))
@@ -225,6 +230,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         .frame(alignment: .leading)
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
+        .foregroundStyle(Color.black)
         .background {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(red: 1, green: 0.7, blue: 0.0))
