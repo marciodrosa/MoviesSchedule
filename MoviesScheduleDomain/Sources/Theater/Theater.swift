@@ -38,3 +38,11 @@ public struct Theater: Equatable, Sendable, Decodable, Identifiable {
         return movieSchedules.contains { $0.movieId == movie.id }
     }
 }
+
+public extension Sequence where Element == Theater {
+    
+    /** All movies ids of all schedules of the theaters in this sequence. */
+    var movieIds: [Int64] {
+        Array<Int64>(reduce(Set<Int64>(), { ids, theater in ids.union(theater.movieSchedules.map({$0.movieId})) }))
+    }
+}

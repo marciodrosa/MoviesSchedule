@@ -53,8 +53,7 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
         do {
             userSchedule = (try await userScheduleRepository.get()) ?? UserSchedule(items: [])
             theaters = try await theaterRepository.getAll()
-            let movieIds = Array(theaters.reduce(Set<Int64>(), { ids, theater in ids.union(theater.movieSchedules.map({$0.movieId})) }))
-            movies = (try await movieRepository.get(byIds: movieIds)).sorted { $0.title < $1.title }
+            movies = (try await movieRepository.get(byIds: theaters.movieIds)).sorted { $0.title < $1.title }
         } catch {
             loadFailed = true
         }
