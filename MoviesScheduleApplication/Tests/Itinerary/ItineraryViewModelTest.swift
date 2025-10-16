@@ -19,6 +19,10 @@ class ItineraryViewModelTest {
         func createItinerary() async -> Itinerary {
             return itinerary
         }
+        
+        func delete(movie: Movie, theater: Theater, schedule: String) async -> Itinerary {
+            return itinerary
+        }
     }
     
     let itineraryService = ItineraryServiceMock()
@@ -41,8 +45,8 @@ class ItineraryViewModelTest {
         await viewModel.load()
 
         // then:
-        #expect(await viewModel.itinerary == itinerary)
-        #expect(await !viewModel.loading)
+        #expect(viewModel.itinerary == itinerary)
+        #expect(!viewModel.loading)
     }
 
 }

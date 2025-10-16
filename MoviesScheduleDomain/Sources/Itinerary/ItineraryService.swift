@@ -13,6 +13,9 @@ public protocol ItineraryService {
     
     /** Creates and returns an Itinerary based on currently saved user schedule. */
     func createItinerary() async -> Itinerary
+    
+    /** Deletes the given itinerary item from the schedule. Returns a new refresh itinerary. */
+    func delete(movie: Movie, theater: Theater, schedule: String) async -> Itinerary
 }
 
 struct ItineraryServiceImpl: ItineraryService {
@@ -49,6 +52,15 @@ struct ItineraryServiceImpl: ItineraryService {
             }
         }
         return Itinerary(items: itineraryItems)
+    }
+    
+    func delete(movie: Movie, theater: Theater, schedule: String) async -> Itinerary {
+        guard var userSchedule = try? await userScheduleRepository.get() else {
+            return await createItinerary()
+        }
+        _ = userSchedule.setItemSelected(movie: movie, theater: theater, schedule: schedule, selected: false)
+        try? await userScheduleRepository.save(userSchedule)
+        return await createItinerary()
     }
     
     func createIntervalItem(betweenItem item: UserScheduleItemData, andItem nextItem: UserScheduleItemData) -> ItineraryItem? {

@@ -12,8 +12,6 @@ struct UserScheduleItemDataTest {
     
     @Test func shouldCalculateEndsAt() {
         // given:
-        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
-        let theater = Theater(id: 10, name: "AMC")
         let item = UserScheduleItemData(
             movie: Movie(id: 1, title: "Star Wars", duration: 120),
             theater: Theater(id: 1, name: ""),

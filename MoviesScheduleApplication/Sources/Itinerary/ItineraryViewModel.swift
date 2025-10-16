@@ -14,6 +14,7 @@ public protocol ItineraryViewModel: ObservableObject {
     var loading: Bool { get }
     var itinerary: Itinerary { get }
     func load() async
+    func delete(movie: Movie, theater: Theater, schedule: String) async
 }
 
 public class ItineraryViewModelImpl: ItineraryViewModel {
@@ -32,6 +33,15 @@ public class ItineraryViewModelImpl: ItineraryViewModel {
         }
         loading = true
         itinerary = await itineraryService.createItinerary()
+        loading = false
+    }
+    
+    public func delete(movie: Movie, theater: Theater, schedule: String) async {
+        if loading {
+            return
+        }
+        loading = true
+        itinerary = await itineraryService.delete(movie: movie, theater: theater, schedule: schedule)
         loading = false
     }
 }

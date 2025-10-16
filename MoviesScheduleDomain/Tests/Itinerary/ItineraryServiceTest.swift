@@ -310,5 +310,100 @@ struct ItineraryServiceTest {
             .endTimeAfterOtherMovieStarted(movie: Movie(id: 6, title: "Short movie", duration: 20), theater: Theater(id: 20, name: "Cinemark"), conflictDuration: 20)
         ])
     }
+    
+    @Test func shouldDeleteItemFromItinerary() async throws {
+        // given:
+        try! await userScheduleRepository.save(UserSchedule(items: [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ]))
+        
+        // when:
+        _ = await itineraryService.delete(
+            movie: Movie(id: 2, title: "Mad Max", duration: 120),
+            theater: Theater(id: 20, name: "AMC"),
+            schedule: "16:30"
+        )
+        
+        // then:
+        let savedSchedule = try! await userScheduleRepository.get()
+        #expect(savedSchedule!.items == [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ])
+    }
+    
+    @Test func shouldNotDeleteItemFromItineraryIfMovieIsWrong() async throws {
+        // given:
+        try! await userScheduleRepository.save(UserSchedule(items: [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ]))
+        
+        // when:
+        _ = await itineraryService.delete(
+            movie: Movie(id: 3, title: "Mad Max", duration: 120),
+            theater: Theater(id: 20, name: "AMC"),
+            schedule: "16:30"
+        )
+        
+        // then:
+        let savedSchedule = try! await userScheduleRepository.get()
+        #expect(savedSchedule!.items == [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ])
+    }
+    
+    @Test func shouldNotDeleteItemFromItineraryIfTheaterIsWrong() async throws {
+        // given:
+        try! await userScheduleRepository.save(UserSchedule(items: [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ]))
+        
+        // when:
+        _ = await itineraryService.delete(
+            movie: Movie(id: 2, title: "Mad Max", duration: 120),
+            theater: Theater(id: 30, name: "AMC"),
+            schedule: "16:30"
+        )
+        
+        // then:
+        let savedSchedule = try! await userScheduleRepository.get()
+        #expect(savedSchedule!.items == [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ])
+    }
+    
+    @Test func shouldNotDeleteItemFromItineraryIfScheduleIsWrong() async throws {
+        // given:
+        try! await userScheduleRepository.save(UserSchedule(items: [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ]))
+        
+        // when:
+        _ = await itineraryService.delete(
+            movie: Movie(id: 2, title: "Mad Max", duration: 120),
+            theater: Theater(id: 20, name: "AMC"),
+            schedule: "16:31"
+        )
+        
+        // then:
+        let savedSchedule = try! await userScheduleRepository.get()
+        #expect(savedSchedule!.items == [
+            UserScheduleItem(movieId: 1, theaterId: 10, schedule: "14:30"),
+            UserScheduleItem(movieId: 2, theaterId: 20, schedule: "16:30"),
+            UserScheduleItem(movieId: 3, theaterId: 30, schedule: "18:30")
+        ])
+    }
 
 }

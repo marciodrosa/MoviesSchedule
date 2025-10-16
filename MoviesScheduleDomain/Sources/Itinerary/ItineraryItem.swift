@@ -42,6 +42,17 @@ public enum ItineraryItem: Equatable, Sendable {
         }
     }
     
+    var schedule: String? {
+        switch self {
+        case .movie(movie: _, _, let schedule):
+            schedule
+        case .movieWithConflicts(movie: _, _, let schedule, _):
+            schedule
+        case .interval(_), .noInterval, .goToOtherTheater(_, _), .goToOtherTheaterWithoutTime(_):
+            nil
+        }
+    }
+    
     var duration: Int {
         switch self {
         case .movie(movie: let movie, _, _):

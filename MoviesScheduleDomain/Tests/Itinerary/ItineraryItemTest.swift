@@ -38,6 +38,20 @@ struct ItineraryItemTest {
         #expect(ItineraryItem.noInterval.theater == nil)
     }
     
+    @Test func shouldReturnScheduleOfMovieItem() {
+        // given:
+        let movie = Movie(id: 1, title: "Star Wars", duration: 120)
+        let theater = Theater(id: 10, name: "AMC")
+        
+        // then
+        #expect(ItineraryItem.movie(movie: movie, theater: theater, schedule: "14:00").schedule == "14:00")
+        #expect(ItineraryItem.movieWithConflicts(movie: movie, theater: theater, schedule: "14:00", conflicts: []).schedule == "14:00")
+        #expect(ItineraryItem.goToOtherTheater(availableTime: 10, theater: theater).schedule == nil)
+        #expect(ItineraryItem.goToOtherTheaterWithoutTime(theater: theater).schedule == nil)
+        #expect(ItineraryItem.interval(duration: 10).schedule == nil)
+        #expect(ItineraryItem.noInterval.schedule == nil)
+    }
+    
     @Test func shouldReturnItineraryItemDuration() {
         // given:
         let movie = Movie(id: 1, title: "Star Wars", duration: 120)

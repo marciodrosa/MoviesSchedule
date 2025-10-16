@@ -86,6 +86,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
+        
     }
     
     func movieBasicInfoView(movie: Movie, theater: Theater, schedule: String) -> some View {
@@ -109,6 +110,14 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
                             .fill(Color(red: 0.5, green: 0.7, blue: 1))
                 }
                 Text(theater.name)
+                Spacer()
+                Button(action: {
+                    Task {
+                        await viewModel.delete(movie: movie, theater: theater, schedule: schedule)
+                    }
+                }, label: {
+                    Image(systemName: "trash")
+                })
             }
             .frame(maxWidth: CGFloat.infinity, alignment: .leading)
             VStack(alignment: .leading, spacing: 4) {
@@ -242,6 +251,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
 
 #Preview {
     final class ItineraryViewModelMock: ItineraryViewModel {
+        
         var loading: Bool = false
         
         var itinerary: Itinerary = Itinerary(items: [
@@ -326,6 +336,10 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         ])
         
         func load() async {
+            
+        }
+        
+        func delete(movie: MoviesScheduleDomain.Movie, theater: MoviesScheduleDomain.Theater, schedule: String) async {
             
         }
     }

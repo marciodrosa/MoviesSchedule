@@ -83,18 +83,18 @@ class ScheduleSelectionViewModelTest {
         ]
 
         // when:
-        await viewModel.load()
+        await viewModel.load(silently: false)
 
         // then:
-        #expect(await viewModel.movies == [
+        #expect(viewModel.movies == [
             Movie(id: 2, title: "Mad Max", duration: 120),
             Movie(id: 1, title: "Star Wars", duration: 120),
             Movie(id: 3, title: "The Godfather", duration: 180),
         ])
-        #expect(await viewModel.theaters(byMovie: Movie(id: 1, title: "Star Wars", duration: 120)).count == 2)
-        #expect(await viewModel.theaters(byMovie: Movie(id: 2, title: "Mad Max", duration: 120)).count == 1)
-        #expect(await viewModel.theaters(byMovie: Movie(id: 3, title: "The Godfather", duration: 180)).count == 1)
-        #expect(await !viewModel.loading)
+        #expect(viewModel.theaters(byMovie: Movie(id: 1, title: "Star Wars", duration: 120)).count == 2)
+        #expect(viewModel.theaters(byMovie: Movie(id: 2, title: "Mad Max", duration: 120)).count == 1)
+        #expect(viewModel.theaters(byMovie: Movie(id: 3, title: "The Godfather", duration: 180)).count == 1)
+        #expect(viewModel.loadingProgress == nil)
     }
     
     @Test func shouldReturnTheatersByMovieSortedByName() async {
@@ -115,7 +115,7 @@ class ScheduleSelectionViewModelTest {
                 MovieSchedules(movieId: 3, theaterId: 2, schedules: ["20:00"]),
             ])
         ]
-        await viewModel.load()
+        await viewModel.load(silently: false)
 
         // when:
         let starWarsTheaters = viewModel.theaters(byMovie: Movie(id: 1, title: "Star Wars", duration: 120))
