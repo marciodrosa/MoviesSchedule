@@ -11,12 +11,12 @@ import MoviesScheduleDomain
 /** View model for the screen where the user picks the schedules. */
 @MainActor
 public protocol ScheduleSelectionViewModel: ObservableObject {
-    var loading: Bool { get }
+    var loadingProgress: Float? { get }
     var loadFailed: Bool { get }
     var movies: [Movie] { get }
     var userSchedule: UserSchedule { get }
     func theaters(byMovie: Movie) -> [Theater]
-    func load() async
+    func load(silently: Bool) async
     func clear() async
     func isScheduleSelected(movie: Movie, theater: Theater, schedule: String) -> Bool
     func setScheduleSelected(movie: Movie, theater: Theater, schedule: String, selected: Bool)
@@ -27,7 +27,7 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
     private let movieRepository: MovieRepository
     private let userScheduleRepository: UserScheduleRepository
     private let theaterRepository: TheaterRepository
-    @Published public private(set) var loading: Bool = false
+    @Published public private(set) var loadingProgress: Float? = nil
     @Published public private(set) var loadFailed: Bool = false
     @Published public private(set) var movies: [Movie] = []
     @Published public private(set) var userSchedule: UserSchedule = UserSchedule(items: [])
@@ -44,20 +44,25 @@ public class ScheduleSelectionViewModelImpl: ScheduleSelectionViewModel {
         return theaters.filter { $0.hasMovie(movie) }.sorted { $0.name < $1.name }
     }
     
-    public func load() async {
-        if loading {
-            return
-        }
-        loading = true
-        loadFailed = false
+    public func load(silently: Bool) async {
+        if !silently { loadingProgress = 0 }
         do {
-            userSchedule = (try await userScheduleRepository.get()) ?? UserSchedule(items: [])
-            theaters = try await theaterRepository.getAll()
-            movies = (try await movieRepository.get(byIds: theaters.movieIds)).sorted { $0.title < $1.title }
+            let userSchedule = (try await userScheduleRepository.get()) ?? UserSchedule(items: [])
+            if !silently { loadingProgress = 0.3 }
+            let theaters = try await theaterRepository.getAll()
+            if !silently { loadingProgress = 0.6 }
+            let movies = (try await movieRepository.get(byIds: theaters.movieIds)).sorted { $0.title < $1.title }
+            if !silently { loadingProgress = nil }
+            self.userSchedule = userSchedule
+            self.theaters = theaters
+            self.movies = movies
+            loadFailed = false
         } catch {
-            loadFailed = true
+            if !silently {
+                loadingProgress = nil
+                loadFailed = true
+            }
         }
-        loading = false
     }
     
     public func clear() async {

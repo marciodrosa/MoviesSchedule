@@ -17,6 +17,8 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
     
     @Environment(\.colorScheme) private var colorScheme
     
+    @State private var progressViewVisible = false
+    
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
@@ -24,8 +26,9 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
     public var body: some View {
         NavigationView {
             VStack {
-                if viewModel.loading {
-                    ProgressView()
+                if viewModel.loadingProgress != nil {
+                    ProgressView(value: viewModel.loadingProgress)
+                        .frame(maxWidth: 50)
                 } else if viewModel.loadFailed {
                     errorEmptyState
                 } else {
@@ -39,6 +42,9 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
                             }
                         }
                     }
+                    .refreshable {
+                        await viewModel.load(silently: true)
+                    }
                     .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.15) : Color.white)
                 }
             }
@@ -46,7 +52,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
                 ToolbarItem {
                     Button(action: {
                         Task {
-                            await viewModel.load()
+                            await viewModel.load(silently: false)
                         }
                     }, label: {
                         Image(systemName: "arrow.clockwise")
@@ -65,7 +71,7 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         }
         .onAppear {
             Task {
-                await viewModel.load()
+                await viewModel.load(silently: false)
             }
         }
     }
@@ -130,14 +136,13 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
         } set: { value in
             viewModel.setScheduleSelected(movie: movie, theater: theater, schedule: schedule, selected: value)
         }
-
     }
 }
 
 #Preview {
     final class ScheduleSelectionViewModelMock: ScheduleSelectionViewModel {
         
-        @Published var loading: Bool = false
+        @Published public private(set) var loadingProgress: Float? = nil
         @Published var loadFailed: Bool = false
         
         var movies: [Movie] = [
@@ -158,13 +163,12 @@ public struct ScheduleSelectionView<ViewModel: ScheduleSelectionViewModel>: View
             ]),
         ]}
         
-        func load() async {
-            guard !loading else {
-                return
-            }
-            loading = true
-            try? await Task.sleep(nanoseconds: 2_000_000_000)
-            loading = false
+        func load(silently: Bool) async {
+            if !silently { loadingProgress = 0 }
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            if !silently { loadingProgress = 0.5 }
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            if !silently { loadingProgress = nil }
         }
         
         func clear() async {

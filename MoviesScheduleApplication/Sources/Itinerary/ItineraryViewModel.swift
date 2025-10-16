@@ -16,7 +16,7 @@ public protocol ItineraryViewModel: ObservableObject {
     func load() async
 }
 
-public class ItineraryViewModelImpl: ItineraryViewModel{
+public class ItineraryViewModelImpl: ItineraryViewModel {
     
     private let itineraryService: ItineraryService
     @Published public private(set) var loading: Bool = false
