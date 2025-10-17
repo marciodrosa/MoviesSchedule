@@ -71,96 +71,17 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
     }
     
     func movieView(movie: Movie, theater: Theater, schedule: String, conflicts: [ItineraryConflict] = []) -> some View {
-        VStack(alignment: .leading) {
-            movieBasicInfoView(movie: movie, theater: theater, schedule: schedule)
-            ForEach(0..<conflicts.count, id: \.self) { i in
-                conflictView(conflict: conflicts[i])
-            }
-        }
-        .frame(alignment: .leading)
-        .padding(.all, 16)
-        .background {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(colorScheme == .dark ? Color.black : Color.white)
-                .shadow(color: Color.black.opacity(0.25), radius: 6, x: 2, y: 3)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        
-    }
-    
-    func movieBasicInfoView(movie: Movie, theater: Theater, schedule: String) -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(schedule)
-                    .bold()
-                    .foregroundStyle(Color.white)
-                    .padding(.all, 6)
-                    .background {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.blue)
+        ItineraryMovieView(
+            movie: movie,
+            theater: theater,
+            schedule: schedule,
+            conflicts: conflicts,
+            onDelete: {
+                Task {
+                    await viewModel.delete(movie: movie, theater: theater, schedule: schedule)
                 }
-                Image(systemName: "arrow.right.square")
-                Text(movie.endsAt(whenStartingAt: schedule))
-                    .bold()
-                    .foregroundStyle(Color.white)
-                    .padding(.all, 6)
-                    .background {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color(red: 0.5, green: 0.7, blue: 1))
-                }
-                Text(theater.name)
-                Spacer()
-                Button(action: {
-                    Task {
-                        await viewModel.delete(movie: movie, theater: theater, schedule: schedule)
-                    }
-                }, label: {
-                    Image(systemName: "trash")
-                })
             }
-            .frame(maxWidth: CGFloat.infinity, alignment: .leading)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(movie.title).font(Font.system(size: 24))
-                Text("\(movie.duration) minutes", bundle: Bundle.module, comment: "Label below the movie title with the runtime duration").font(Font.system(size: 12))
-            }
-            .frame(maxWidth: CGFloat.infinity, alignment: .leading)
-        }
-    }
-    
-    func conflictView(conflict: ItineraryConflict) -> some View {
-        switch conflict {
-        case .sameStartTime(movie: let movie, theater: let theater):
-            conflictView(text: String(localized: "This movie starts at the same time as \(movie.title) at \(theater.name).", bundle: Bundle.module, comment: "Text explaining a conflict of selected movies in the itinerary"))
-        case .startTimeBeforeOtherMovieEnded(movie: let movie, theater: let theater, conflictDuration: let conflictDuration):
-            conflictView(text: String(localized: "This movie starts \(conflictDuration) minutes before movie \(movie.title) at \(theater.name) has ended.", bundle: Bundle.module, comment: "Text explaining a conflict of selected movies in the itinerary"))
-        case .endTimeAfterOtherMovieStarted(movie: let movie, theater: let theater, conflictDuration: let conflictDuration):
-            conflictView(text: String(localized: "This movie ends \(conflictDuration) minutes after movie \(movie.title) at \(theater.name) has started.", bundle: Bundle.module, comment: "Text explaining a conflict of selected movies in the itinerary"))
-        }
-    }
-    
-    func conflictView(text: String) -> some View {
-        HStack {
-            Image(systemName: "exclamationmark.circle")
-                .resizable()
-                .renderingMode(.template)
-                .foregroundStyle(Color.red)
-                .frame(width: 24, height: 24)
-            VStack(alignment: .leading) {
-                Text("Warning: schedule conflict", bundle: Bundle.module, comment: "Title of the card in the itinerary with information regarding a schedule conflict")
-                    .font(Font.system(size: 20))
-                    .bold()
-                    .foregroundStyle(Color.red)
-                Text(text)
-                    .foregroundStyle(Color.red)
-            }
-        }
-        .padding(.all, 8)
-        .background {
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(lineWidth: 2)
-                .fill(Color.red)
-        }
+        )
     }
     
     func intervalView(duration: Int) -> some View {
@@ -340,7 +261,7 @@ struct ItineraryView<ViewModel: ItineraryViewModel>: View {
         }
         
         func delete(movie: MoviesScheduleDomain.Movie, theater: MoviesScheduleDomain.Theater, schedule: String) async {
-            
+            print("Deleted")
         }
     }
     
